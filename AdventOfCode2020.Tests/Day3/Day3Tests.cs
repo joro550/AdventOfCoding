@@ -123,8 +123,9 @@ namespace AdventOfCode2020.Tests.Day3
                 GetTreeCount(map, new XMove(), new YMove(), new YMove()),
             };
             
-            var answer = treeCounts.Aggregate(1L, (prod, next) => prod * next);
-            _testOutputHelper.WriteLine(answer.ToString());
+            var treeCount = treeCounts.Aggregate(1L, (prod, next) => prod * next);
+            _testOutputHelper.WriteLine(treeCount.ToString());
+            Assert.Equal(3492520200, treeCount);
         }
 
         private static int GetTreeCount(Map map, params Move[] moves)
