@@ -116,11 +116,10 @@ namespace AdventOfCode2020.Tests.Day3
             var treeCounts = new[]
             {
                 GetTreeCount(map, new XMove(), new YMove()),
-                GetTreeCount(map, new XMove(), new XMove(), new XMove(), new YMove()),
-                GetTreeCount(map, new XMove(), new XMove(), new XMove(), new XMove(), new XMove(), new YMove()),
-                GetTreeCount(map, new XMove(), new XMove(), new XMove(), new XMove(), new XMove(), new XMove(),
-                    new XMove(), new YMove()),
-                GetTreeCount(map, new XMove(), new YMove(), new YMove()),
+                GetTreeCount(map, new MultipleXMove(3), new YMove()),
+                GetTreeCount(map, new MultipleXMove(5), new YMove()),
+                GetTreeCount(map, new MultipleXMove(7), new YMove()),
+                GetTreeCount(map, new XMove(), new MultipleYMove(2)),
             };
             
             var treeCount = treeCounts.Aggregate(1L, (prod, next) => prod * next);

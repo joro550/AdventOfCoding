@@ -20,10 +20,7 @@ namespace AdventOfCode2020.Day3
             _visitedSpaces.Add(GetSpaceOnMap());
         }
 
-        private void Accept(Move navigator)
-        {
-            navigator.VisitNavigator(this);
-        }
+        private void Accept(Move navigator) => navigator.VisitNavigator(this);
 
         public Space GetSpaceOnMap()
             => _map.GetCoords(X, Y);
@@ -40,19 +37,24 @@ namespace AdventOfCode2020.Day3
         }
     }
 
-    public record VisitedSpaces
-    {
-        public List<Space> Spaces { get; } = new();
-    }
-
     public record YMove : Move
     {
         public override void VisitNavigator(Navigator navigator) => navigator.Y++;
+    }
+    
+    public record MultipleYMove(int MoveCount) : Move
+    {
+        public override void VisitNavigator(Navigator navigator) => navigator.Y+= MoveCount;
     }
 
     public record XMove : Move
     {
         public override void VisitNavigator(Navigator navigator) => navigator.X++;
+    }
+    
+    public record MultipleXMove(int MoveCount) : Move
+    {
+        public override void VisitNavigator(Navigator navigator) => navigator.X+= MoveCount;
     }
 
     public abstract record Move
