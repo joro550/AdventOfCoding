@@ -22,6 +22,8 @@
     <ItemGroup>
       <EmbeddedResource Include="Day2\PuzzleInput.txt" />
       <EmbeddedResource Include="Day3\PuzzleInput.txt" />
+      <EmbeddedResource Include="Day4\PuzzleInput.txt" />
+      <EmbeddedResource Include="Day4\PuzzleInput2.txt" />
       <None Remove="Day1\PuzzleInput.txt" />
       <EmbeddedResource Include="Day1\PuzzleInput.txt" />
       <None Remove="Day3\ExampleInput.txt" />

@@ -25,8 +25,8 @@ namespace AdventOfCode2020.Tests.Day3
             var map = Map.LoadMap(exampleInput);
 
             Assert.IsType<Space>(map.GetCoords(0, 0));
-            Assert.IsType<Space>(map.GetCoords(0, 1));
-            Assert.IsType<Tree>(map.GetCoords(0, 2));
+            Assert.IsType<Space>(map.GetCoords(1, 0));
+            Assert.IsType<Tree>(map.GetCoords(2, 0));
         }
         
         [Theory]
@@ -36,13 +36,13 @@ namespace AdventOfCode2020.Tests.Day3
             var map = Map.LoadMap(mapString);
 
             Assert.IsType<Space>(map.GetCoords(0, 0));
-            Assert.IsType<Space>(map.GetCoords(0, 1));
-            Assert.IsType<Tree>(map.GetCoords(0, 2));
+            Assert.IsType<Space>(map.GetCoords(1, 0));
+            Assert.IsType<Tree>(map.GetCoords(2, 0));
             
             // overflow
-            Assert.IsType<Space>(map.GetCoords(0, 3));
-            Assert.IsType<Space>(map.GetCoords(0, 4));
-            Assert.IsType<Tree>(map.GetCoords(0, 5));
+            Assert.IsType<Space>(map.GetCoords(3, 0));
+            Assert.IsType<Space>(map.GetCoords(4, 0));
+            Assert.IsType<Tree>(map.GetCoords(5, 0));
         }
         
         [Theory]
@@ -52,7 +52,7 @@ namespace AdventOfCode2020.Tests.Day3
             var map = Map.LoadMap(mapString);
 
             Assert.IsType<Space>(map.GetCoords(0, 0));
-            Assert.IsType<Freedom>(map.GetCoords(1, 0));
+            Assert.IsType<Freedom>(map.GetCoords(0, 1));
         }
         
         
