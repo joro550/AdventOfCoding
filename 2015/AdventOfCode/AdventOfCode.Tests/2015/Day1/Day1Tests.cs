@@ -62,7 +62,6 @@ namespace AdventOfCode.Tests._2015.Day1
             Assert.Equal(basementPosition, floor.BasementAtPosition);
         }
         
-        
         [Fact]
         public void SolvePuzzle2()
         {
