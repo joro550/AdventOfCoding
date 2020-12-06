@@ -48,6 +48,7 @@ c";
             var sum = groups.Select(g => g.GetGroupAnswerCount())
                 .Sum();
             _testOutputHelper.WriteLine(sum.ToString());
+            Assert.Equal(6630, sum);
         }
         
         [Fact]
@@ -110,6 +111,7 @@ b";
             var sum = groups.Select(g => g.GetGroupAnswerCount())
                 .Sum();
             _testOutputHelper.WriteLine(sum.ToString());
+            Assert.Equal(3437, sum);
         }
     }
 }

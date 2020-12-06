@@ -8,18 +8,16 @@ namespace AdventOfCode2020.Day6
     {
         public static IEnumerable<Group> Parse(string input) =>
             input.Split(Environment.NewLine + Environment.NewLine)
-                .Select(group => string.Join("", group.Split(Environment.NewLine)))
-                .Select(answers => new Group(answers)).ToList();
+                .Select(group => new Group(group.Split(Environment.NewLine).ToList()));
 
-
-        public static IEnumerable<GroupAnswer> ParsePuzzle2(string input) =>
+        public static IEnumerable<Group> ParsePuzzle2(string input) =>
             input.Split(Environment.NewLine + Environment.NewLine)
                 .Select(group => new GroupAnswer(group.Split(Environment.NewLine).ToList()));
     }
 
-    public record GroupAnswer(List<string> Answers)
+    public record GroupAnswer(List<string> Answers) : Group(Answers)
     {
-        public int GetGroupAnswerCount()
+        public override int GetGroupAnswerCount()
         {
             return Answers.Count == 1
                 ? Answers[0].Length
@@ -27,9 +25,12 @@ namespace AdventOfCode2020.Day6
         }
     }
 
-    public record Group(string Answers)
+    public record Group(List<string> Answers)
     {
-        public int GetGroupAnswerCount() 
-            => Answers.Distinct().Count();
+        public virtual int GetGroupAnswerCount() =>
+            string.Join("", Answers)
+                .Distinct()
+                .Count();
     }
+        
 }
