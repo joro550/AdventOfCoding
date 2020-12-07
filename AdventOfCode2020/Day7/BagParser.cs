@@ -53,6 +53,9 @@ namespace AdventOfCode2020.Day7
                 if(rule == null)
                     continue;
                 
+                var bagRule = FindInBagRule(modifier, colour, rule.BagRule.Select(r => r.bag));
+
+                
                 var canHoldBag = rule.BagRule.Any(r => r.bag.Modifier == modifier && r.bag.Colour == colour);
 
                 if (canHoldBag)
@@ -61,7 +64,6 @@ namespace AdventOfCode2020.Day7
                 }
                 else
                 {
-                    var bagRule = FindInBagRule(modifier, colour, bag.BagRule.Select(r => r.bag));
                     if(bagRule.Any())
                         hashSet.Add(bag.GetName());
                 }
@@ -69,6 +71,24 @@ namespace AdventOfCode2020.Day7
 
             return hashSet;
         }
+    }
+    
+    public class BagCounter
+    {
+        private readonly List<Bag> _bags;
+
+        public BagCounter(List<Bag> bags) 
+            => _bags = bags;
+
+        public int FindThing(string modifier, string colour)
+        {
+            var rule = _bags.SingleOrDefault(b => b.Modifier == modifier && b.Colour == colour);
+            return GetBagCount(rule);
+        }
+
+        private int GetBagCount(Bag bag) =>
+            _bags.SingleOrDefault(b => b.Modifier == bag.Modifier && b.Colour == bag.Colour)?
+                .BagRule.Sum(rule => rule.Number + rule.Number * GetBagCount(rule.bag)) ?? 0;
     }
     
     public record Bag(string Modifier, string Colour)

@@ -42,5 +42,37 @@ dotted black bags contain no other bags.";
 
             _testOutputHelper.WriteLine(count.ToString());
         }
+        
+        [Fact]
+        public void ExamplePuzzle2()
+        {
+            const string input = @"shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags.";
+
+            var bags = BagParser.Parse(input);
+            var traverser = new BagCounter(bags);
+            var things = traverser.FindThing("shiny", "gold");
+
+            
+            Assert.Equal(126, things);
+        }
+        
+        [Fact]
+        public void SolvePuzzle2()
+        {
+            var puzzleInput = new FileReader()
+                .GetResource("AdventOfCode2020.Tests.Day7.PuzzleInput.txt");
+
+            var bags = BagParser.Parse(puzzleInput);
+            var traverser = new BagCounter(bags);
+            var count = traverser.FindThing("shiny", "gold");
+
+            _testOutputHelper.WriteLine(count.ToString());
+        }
     }
 }
