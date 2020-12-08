@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AdventOfCode2020.Day8;
 using Xunit;
 using Xunit.Abstractions;
+using AdventOfCode2020.Day8;
 
 namespace AdventOfCode2020.Tests.Day8
 {
@@ -11,9 +9,59 @@ namespace AdventOfCode2020.Tests.Day8
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public Day8Tests(ITestOutputHelper testOutputHelper)
+        public Day8Tests(ITestOutputHelper testOutputHelper) 
+            => _testOutputHelper = testOutputHelper;
+
+        [Fact]
+        public void GivenMultipleInstructions_ThenMultipleOperationsAreAddedToProgram()
         {
-            _testOutputHelper = testOutputHelper;
+            var program = LanguageParser.Parse(@"nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6");
+            Assert.Equal(9, program.Operations.Count);
+            Assert.IsType<NoOperation>(program.Operations[0]);
+            Assert.IsType<AccumulateOperation>(program.Operations[1]);
+            Assert.IsType<JumpOperation>(program.Operations[2]);
+            Assert.IsType<AccumulateOperation>(program.Operations[3]);
+            Assert.IsType<JumpOperation>(program.Operations[4]);
+            Assert.IsType<AccumulateOperation>(program.Operations[5]);
+            Assert.IsType<AccumulateOperation>(program.Operations[6]);
+            Assert.IsType<JumpOperation>(program.Operations[7]);
+            Assert.IsType<AccumulateOperation>(program.Operations[8]);
+        }
+        
+        [InlineData("nop +0", typeof(NoOperation))]
+        [InlineData("acc +1", typeof(AccumulateOperation))]
+        [InlineData("jmp -3", typeof(JumpOperation))]
+        [Theory]
+        public void GivenOperation_ThenAppropriateOperationIsAddedToProgram(string input, Type operationType)
+        {
+            var program = LanguageParser.Parse(input);
+
+            Assert.Single(program.Operations);
+            Assert.IsType(operationType, program.Operations[0]);
+        }
+        
+        [InlineData("nop +0", "+", 0)]
+        [InlineData("nop -0", "-", 0)]
+        [InlineData("acc +1", "+", 1)]
+        [InlineData("acc -1", "-", 1)]
+        [InlineData("jmp -3", "-", 3)]
+        [InlineData("jmp +3", "+", 3)]
+        [Theory]
+        public void GivenOperationWithParameters_ThenAppropriateParametersAreAddedToOperation(string input, string plusMinus, int number)
+        {
+            var program = LanguageParser.Parse(input);
+
+            var op = Assert.Single(program.Operations);
+            Assert.Equal(plusMinus, op!.PlusMinus);
+            Assert.Equal(number, op!.Number);
         }
 
         [Fact]
