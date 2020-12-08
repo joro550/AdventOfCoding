@@ -31,30 +31,24 @@ namespace AdventOfCode2020.Day8
     
     public record DebugProgram
     {
-        private readonly List<Operation> _operations;
-        private readonly ExecutionContext _context;
+        public readonly List<Operation> Operations;
 
         public DebugProgram(List<Operation> operations)
         {
-            _operations = operations;
-            _context = new ExecutionContext();
+            Operations = operations;
         }
 
         public ExecutionContext Execute()
         {
-            var visitor = new FindLoop(_context);
+            var context = new ExecutionContext();
             
-            while (!_context.Complete && _context.CurrentOperation < _operations.Count)
-                try
-                {
-                    _operations[_context.CurrentOperation].Accept(visitor);
-                }
-                catch (Exception)
-                {
-                    
-                }
+            while (!context.Complete && context.CurrentOperation < Operations.Count)
+            {
+                var operation = Operations[context.CurrentOperation];
+                context.Execute(operation);
+            }
 
-            return _context;
+            return context;
         }
     }
 
@@ -63,6 +57,19 @@ namespace AdventOfCode2020.Day8
         public int CurrentOperation { get; set; }
         public int Accumulator { get; set; }
         public bool Complete { get; set; }
+        
+        private readonly List<int> _lineNumbers = new();
+
+        public void Execute(Operation operation)
+        {
+            operation.Accept(new FindLoop(this));
+            
+            if(_lineNumbers.All(ln => ln != CurrentOperation))
+                _lineNumbers.Add(CurrentOperation);
+            else
+                Complete = true;
+        }
+        
     }
     
     public record FindLoop : OperationVisitor
@@ -81,14 +88,6 @@ namespace AdventOfCode2020.Day8
 
         public override void Visit(AccumulateOperation operation)
         {
-            if(_lineNumbers.All(ln => ln != Context.CurrentOperation))
-               _lineNumbers.Add(Context.CurrentOperation);
-            else
-            {
-                Context.Complete = true;
-                return;
-            }
-            
             switch (operation.PlusMinus)
             {
                 case "+":
@@ -113,10 +112,6 @@ namespace AdventOfCode2020.Day8
                     break;
             }
         }
-    }
-
-    public class InfiniteLoopDetectedException : Exception
-    {
     }
 
     public abstract record OperationVisitor

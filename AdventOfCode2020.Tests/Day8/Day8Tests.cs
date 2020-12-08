@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AdventOfCode2020.Day8;
 using Xunit;
 using Xunit.Abstractions;
@@ -43,15 +45,61 @@ acc +6");
         }
         
         [Fact]
+        public void Puzzle2GivenExampleInput_ThenAccIsFiveWhenLoopHappens()
+        {
+            var context = ExecutionContext(@"nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6");
+            Assert.Equal(8, context.Accumulator);
+        }
+        
+        [Fact]
         public void SolvePuzzle2()
         {
             var puzzleInput = new FileReader()
-                .GetResource("AdventOfCode2020.Tests.Day8.PuzzleInput2.txt");
-            var program = LanguageParser.Parse(puzzleInput);
+                .GetResource("AdventOfCode2020.Tests.Day8.PuzzleInput.txt");
+            
+            var context = ExecutionContext(puzzleInput);
 
-            var context = program.Execute();
             _testOutputHelper.WriteLine(context.CurrentOperation.ToString());
             _testOutputHelper.WriteLine(context.Accumulator.ToString());
+        }
+
+        private static ExecutionContext ExecutionContext(string puzzleInput)
+        {
+            ExecutionContext context = null;
+            var program = LanguageParser.Parse(puzzleInput);
+
+            for (var i = 0; i < program.Operations.Count; i++)
+            {
+                // Switch Jmp for no op or no op for jmp
+                var originalOp = program.Operations[i];
+
+                program.Operations[i] = originalOp switch
+                {
+                    JumpOperation => new NoOperation(originalOp.PlusMinus, originalOp.Number),
+                    NoOperation => new JumpOperation(originalOp.PlusMinus, originalOp.Number),
+                    _ => program.Operations[i]
+                };
+
+                // Execute with new operation
+                context = program.Execute();
+
+                // Did we get through the program?
+                if (context.CurrentOperation == program.Operations.Count)
+                    break;
+
+                // Set it back
+                program.Operations[i] = originalOp;
+            }
+
+            return context;
         }
     }
 }
