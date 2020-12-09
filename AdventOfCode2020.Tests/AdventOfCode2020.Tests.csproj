@@ -25,6 +25,7 @@
       <EmbeddedResource Include="Day4\PuzzleInput.txt" />
       <EmbeddedResource Include="Day4\PuzzleInput2.txt" />
       <EmbeddedResource Include="Day8\PuzzleInput2.txt" />
+      <EmbeddedResource Include="Day9\PuzzleInput.txt" />
       <None Remove="Day1\PuzzleInput.txt" />
       <EmbeddedResource Include="Day1\PuzzleInput.txt" />
       <None Remove="Day3\ExampleInput.txt" />
