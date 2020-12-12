@@ -112,7 +112,7 @@ L.LLLLL.LL";
 
             Map currentMap = null;
             var cont = false;
-            
+            int count = 0;
             do
             {
                 var map = currentMap?.DeepCopy();
@@ -122,11 +122,13 @@ L.LLLLL.LL";
                     cont = true;
                 else if (map.Compare(currentMap))
                     cont = false;
+                count++;
 
             } while (cont);
 
             var spaces = currentMap!.GetAllSpaces().Count(x => x is OccupiedSeat);
             _testOutputHelper.WriteLine(spaces.ToString());
+            _testOutputHelper.WriteLine(count.ToString());
 
         }
         
@@ -179,6 +181,7 @@ L.LLLLL.LL";
 
             Map currentMap = null;
             var cont = false;
+            int count = 0;
             
             do
             {
@@ -189,11 +192,12 @@ L.LLLLL.LL";
                     cont = true;
                 else if (map.Compare(currentMap))
                     cont = false;
-
+                count++;
             } while (cont);
 
             var spaces = currentMap!.GetAllSpaces().Count(x => x is OccupiedSeat);
             _testOutputHelper.WriteLine(spaces.ToString());
+            _testOutputHelper.WriteLine(count.ToString());
         }
     }
 }
