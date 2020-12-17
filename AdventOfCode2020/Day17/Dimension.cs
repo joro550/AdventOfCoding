@@ -34,16 +34,23 @@ namespace AdventOfCode2020.Day17
         private Dictionary<string, Cube> GenerateNeighbours()
         {
             var cubeList = new Dictionary<string, Cube>();
-            foreach (var cubes in Cubes.Values)
+
+            foreach (var (key, value) in Cubes) 
+                cubeList.Add(key, value);
+
+            foreach (var (key, cube) in Cubes)
             {
-                foreach (var position in cubes.GetNeighbourCoordinates())
+                foreach (var position in cube.GetNeighbourCoordinates())
                 {
-                    var key = position.Base64Encode();
-                    if (cubeList.ContainsKey(key)) 
+                    var positionKey = position.Base64Encode();
+                    if (cubeList.ContainsKey(positionKey)) 
                         continue;
                     
-                    var cubeToAdd = Cubes.ContainsKey(key) ? Cubes[key] : Cube.CreateCube(position);
-                    cubeList.Add(key, cubeToAdd);
+                    var cubeToAdd = Cubes.ContainsKey(positionKey) 
+                        ? Cubes[positionKey] 
+                        : Cube.CreateCube(position);
+                    
+                    cubeList.Add(positionKey, cubeToAdd);
                 }
             }
 
