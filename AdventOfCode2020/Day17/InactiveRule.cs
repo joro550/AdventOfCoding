@@ -18,6 +18,9 @@ namespace AdventOfCode2020.Day17
 
         public override Cube Apply(Dimension2 dimension, Cube cube)
         {
+            if (cube.Active)
+                return cube;
+                    
             var activeNeighbours = GetNeighboursInRange(dimension, cube)
                 .Count(x => x.Active);
             if (activeNeighbours == 3)

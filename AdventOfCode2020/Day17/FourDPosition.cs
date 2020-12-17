@@ -18,6 +18,6 @@ namespace AdventOfCode2020.Day17
             => left with { X = left.X - num, Y = left.Y - num, Z = left.Z - num, W = left.W - num};
         
         public override string Base64Encode() 
-            => Convert.ToBase64String(Encoding.UTF8.GetBytes($"{X}{Y}{Z}{W}"));
+            => Convert.ToBase64String(Encoding.UTF8.GetBytes($"X:{X},Y:{Y},Z:{Z},W:{W}"));
     }
 }

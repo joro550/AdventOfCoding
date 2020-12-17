@@ -21,9 +21,7 @@ namespace AdventOfCode2020.Day17
                     _ => false
                 }))
                 {
-                    var position = new Position(x, y, 0);
-                    var cube = new Cube(position, active, false);
-                    cubes.Add(cube);
+                    cubes.Add(new Cube(new Position(x, y, 0), active, false));
                     x++;
                 }
 

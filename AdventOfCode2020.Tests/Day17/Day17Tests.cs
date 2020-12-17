@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit.Abstractions;
 using AdventOfCode2020.Day17;
@@ -25,22 +26,22 @@ namespace AdventOfCode2020.Tests.Day17
         public void Example1()
         {
             const string input = @".#.|..#|###";
-            var dimension = DimensionParser.Parse3Dv1(input.Replace("|", Environment.NewLine));
+            var dimension = DimensionParser.Parse3D(input.Replace("|", Environment.NewLine));
 
             dimension = dimension.Simulate();
-            Assert.Equal(11, dimension.Cubes.Count(c => c.Active));
+            Assert.Equal(11, dimension.Cubes.Count(c => c.Value.Active));
             
             dimension = dimension.Simulate();
-            Assert.Equal(21, dimension.Cubes.Count(c => c.Active));
+            Assert.Equal(21, dimension.Cubes.Count(c => c.Value.Active));
             
             dimension = dimension.Simulate();
-            Assert.Equal(38, dimension.Cubes.Count(c => c.Active));
+            Assert.Equal(38, dimension.Cubes.Count(c => c.Value.Active));
             
             dimension = dimension.Simulate();
             dimension = dimension.Simulate();
             dimension = dimension.Simulate();
             
-            Assert.Equal(112, dimension.Cubes.Count(c => c.Active));
+            Assert.Equal(112, dimension.Cubes.Count(c => c.Value.Active));
         }
 
         [Fact]
@@ -49,13 +50,13 @@ namespace AdventOfCode2020.Tests.Day17
             var input = new FileReader()
                 .GetResource("AdventOfCode2020.Tests.Day17.PuzzleInput.txt");
 
-            var dimension = DimensionParser.Parse3Dv1(input);
+            var dimension = DimensionParser.Parse3D(input);
             for (int i = 0; i < 6; i++)
             {
                 dimension = dimension.Simulate();
             }
             
-            Assert.Equal(207, dimension.Cubes.Count(c => c.Active));
+            Assert.Equal(207, dimension.Cubes.Count(c => c.Value.Active));
         }
 
         [Fact]
@@ -90,7 +91,7 @@ namespace AdventOfCode2020.Tests.Day17
             dimension = dimension.Simulate();
             dimension = dimension.Simulate();
             
-            Assert.Equal(2404, dimension.Cubes.Count(c => c.Value.Active));
+            Assert.Equal(2308, dimension.Cubes.Count(c => c.Value.Active));
         }
     }
 }

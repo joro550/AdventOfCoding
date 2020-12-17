@@ -5,8 +5,6 @@ namespace AdventOfCode2020.Day17
 {
     public record Position(int X, int Y, int Z)
     {
-        private Guid Id = Guid.NewGuid();
-        
         public static bool operator <=(Position left, Position right) 
             => left.X <= right.X && left.Y <= right.Y && left.Z <= right.Z;
 
@@ -20,6 +18,6 @@ namespace AdventOfCode2020.Day17
             => left with { X = left.X - num, Y = left.Y - num, Z = left.Z - num};
         
         public virtual string Base64Encode() 
-            => Convert.ToBase64String(Encoding.UTF8.GetBytes($"{X}{Y}{Z}"));
+            => Convert.ToBase64String(Encoding.UTF8.GetBytes($"X:{X},Y:{Y},Z:{Z}"));
     }
 }
