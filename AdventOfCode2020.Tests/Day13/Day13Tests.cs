@@ -93,7 +93,7 @@ namespace AdventOfCode2020.Tests.Day13
         
         public static TheoryData<string, (int, int)[]> Data2 = new()
         {
-            {"939|7,13,x,x,59,x,31,19", new [] {(7, 1), (13, 2)}},
+            {"939|7,13,x,x,59,x,31,19", new [] {(7, 0), (13, 1)}},
         };
 
         public Day13Tests(ITestOutputHelper testOutputHelper)
@@ -114,18 +114,6 @@ namespace AdventOfCode2020.Tests.Day13
                 Assert.Equal(info[index].id, id);
                 Assert.Equal(info[index].departTime, departAtMinute);
             }
-        }
-        
-        [Theory]
-        [InlineData(7, 1, 0, 1, 2)]
-        [InlineData(13, 2, 4, 6, 8)]
-        [InlineData(59, 5, 5, 10, 15, 20)]
-        public void WhenTimeStampIsDivisibleByTimeStamp_BusDepartsIsTrue(int id, int departAtMinute, params int[] departTimes)
-        {
-            var schedule = new BusSchedule(id, departAtMinute);
-
-            foreach (var departTime in departTimes) 
-                Assert.True(schedule.DoesDepartAt(departTime));
         }
 
         [Theory]
