@@ -16,31 +16,11 @@ namespace AdventOfCode2020.Tests.Day17
         }
 
         [Fact]
-        public void GivenInput_ThenDimensionInitialStateIsAsExpected()
-        {
-            const string input = @".#.|..#|###";
-            var dimension = DimensionParser.Parse3D(input.Replace("|", Environment.NewLine));
-
-            Assert.False(dimension[0, 0, 0].Active);
-            Assert.True(dimension[1, 0, 0].Active);
-            Assert.False(dimension[2, 0, 0].Active);
-            
-            Assert.False(dimension[0, 1, 0].Active);
-            Assert.False(dimension[1, 1, 0].Active);
-            Assert.True(dimension[2, 1, 0].Active);
-            
-            Assert.True(dimension[0, 2, 0].Active);
-            Assert.True(dimension[1, 2, 0].Active);
-            Assert.True(dimension[2, 2, 0].Active);
-        }
-
-        [Fact]
         public void WhenAccessingCubeThatDoesntExist_ThenOneIsCreated()
         {
             const string input = @".#.|..#|###";
             var dimension = DimensionParser.Parse3D(input.Replace("|", Environment.NewLine));
             
-            Assert.False(dimension[0, 0, 1].Active);
             Assert.Equal(9, dimension.Cubes.Count);
         }
 
