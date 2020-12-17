@@ -52,5 +52,6 @@ namespace AdventOfCode2020.Day17
             return NeighbourPositions;
         }
 
+        public string? GetString() => Active ? "#" : ".";
     }
 }

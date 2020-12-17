@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Xunit;
+using System;
 using System.Linq;
-using AdventOfCode2020.Day17;
-using Xunit;
 using Xunit.Abstractions;
+using AdventOfCode2020.Day17;
 
 namespace AdventOfCode2020.Tests.Day17
 {
@@ -10,10 +10,7 @@ namespace AdventOfCode2020.Tests.Day17
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public Day17Tests(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
+        public Day17Tests(ITestOutputHelper testOutputHelper) => _testOutputHelper = testOutputHelper;
 
         [Fact]
         public void WhenAccessingCubeThatDoesntExist_ThenOneIsCreated()
@@ -56,6 +53,7 @@ namespace AdventOfCode2020.Tests.Day17
             for (int i = 0; i < 6; i++)
             {
                 dimension = dimension.Simulate();
+                _testOutputHelper.WriteLine(dimension.Print());
             }
             
             Assert.Equal(207, dimension.Cubes.Count(c => c.Value.Active));

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace AdventOfCode2020.Day17
 {
@@ -47,6 +48,18 @@ namespace AdventOfCode2020.Day17
             }
 
             return cubeList;
+        }
+        
+        
+        public string Print()
+        {
+            var sb = new StringBuilder();
+            foreach (var cube in Cubes.Values)
+            {
+                sb.Append(cube.GetString());
+            }
+
+            return sb.ToString();
         }
     }
 }
