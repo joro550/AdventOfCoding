@@ -43,14 +43,10 @@ namespace AdventOfCode2020.Day17
                 foreach (var position in cube.GetNeighbourCoordinates())
                 {
                     var positionKey = position.Base64Encode();
-                    if (cubeList.ContainsKey(positionKey)) 
+                    if (cubeList.ContainsKey(positionKey) || Cubes.ContainsKey(positionKey)) 
                         continue;
-                    
-                    var cubeToAdd = Cubes.ContainsKey(positionKey) 
-                        ? Cubes[positionKey] 
-                        : Cube.CreateCube(position);
-                    
-                    cubeList.Add(positionKey, cubeToAdd);
+
+                    cubeList.Add(positionKey, Cube.CreateCube(position));
                 }
             }
 
@@ -67,6 +63,61 @@ namespace AdventOfCode2020.Day17
             }
 
             return sb.ToString();
+        }
+    }
+    
+    public record Dimension2(HashSet<Cube> Cubes)
+    {
+        private readonly List<Rule> _rules = new()
+        {
+            new ActiveRule(),
+            new InactiveRule()
+        };
+
+        private Cube CreateIfNotExists(Position position) 
+            => Cubes.Any(c => c.Position == position) ? null : Cube.CreateCube(position);
+
+        public Dimension2 Simulate()
+        {
+            var cubes = new HashSet<Cube>();
+            
+            //Create neighbours
+            GenerateNeighbours();
+
+            foreach (var cube in Cubes)
+            {
+                foreach (var rule in _rules.Where(r => r.ShouldApply(cube)))
+                {
+                    cubes.Add(rule.Apply(this, cube));
+                }
+            }
+
+            return this with { Cubes = cubes};
+        }
+
+        private void GenerateNeighbours()
+        {
+            var cubesWithoutGeneratedNeighbours = Cubes.Where(c => !c.HasGeneratedNeighbours).ToArray();
+            
+            var seenPositions = new HashSet<Position>();
+            
+            for (var index = 0; index < cubesWithoutGeneratedNeighbours.Length; index++)
+            {
+                var cube = cubesWithoutGeneratedNeighbours[index];
+                cubesWithoutGeneratedNeighbours[index] = cube with {HasGeneratedNeighbours = true};
+
+                foreach (var position in cube.GetNeighbourCoordinates())
+                {
+                    if(seenPositions.Any(p => p == position))
+                        continue;
+                    
+                    seenPositions.Add(position);
+                    var cubeToAdd = CreateIfNotExists(position);
+                    if (cubeToAdd == null)
+                        continue;
+                    Cubes.Add(cubeToAdd);
+                }
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode2020.Day17
 {
@@ -6,7 +7,8 @@ namespace AdventOfCode2020.Day17
     {
         public abstract bool ShouldApply(Cube cube);
         public abstract Cube Apply(Dimension dimension, Cube cube);
-        
+        public abstract Cube Apply(Dimension2 dimension, Cube cube);
+
         protected static Dictionary<string, Cube> GetNeighboursInRange(Dimension dimension, Cube cube)
         {
             var range = cube.GetNeighbourCoordinates();
@@ -23,5 +25,20 @@ namespace AdventOfCode2020.Day17
             
             return neighbours;
         }
+        
+        protected static IEnumerable<Cube> GetNeighboursInRange(Dimension2 dimension, Cube cube)
+        {
+            var range = cube.GetRange();
+            var neighbours = dimension.Cubes.Where(c =>
+            {
+                var position = c.Position;
+
+                return position >= range.Min &&
+                       position <= range.Max &&
+                       c != cube;
+            });
+            return neighbours;
+        }
+
     }
 }

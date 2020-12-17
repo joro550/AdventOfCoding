@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AdventOfCode2020.Day17
 {
-    public record Cube(Position Position, bool Active)
+    public record Cube(Position Position, bool Active, bool HasGeneratedNeighbours)
     {
         protected readonly HashSet<Position> NeighbourPositions 
             = new();
@@ -12,8 +12,8 @@ namespace AdventOfCode2020.Day17
         {
             return p switch
             {
-                FourDPosition position => new FourDimensionCube(position, false),
-                _ => new Cube(p, false)
+                FourDPosition position => new FourDimensionCube(position, false, false),
+                _ => new Cube(p, false, false)
             };
         }
 

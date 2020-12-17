@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace AdventOfCode2020.Day17
 {
-    public record FourDimensionCube(Position Position, bool Active)
-        :Cube(Position, Active)
+    public record FourDimensionCube(Position Position, bool Active, bool HasGeneratedNeighbours)
+        :Cube(Position, Active, HasGeneratedNeighbours)
     {
         public override IEnumerable<Position> GetNeighbourCoordinates()
         {

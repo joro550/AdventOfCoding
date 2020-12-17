@@ -5,6 +5,8 @@ namespace AdventOfCode2020.Day17
 {
     public record Position(int X, int Y, int Z)
     {
+        private Guid Id = Guid.NewGuid();
+        
         public static bool operator <=(Position left, Position right) 
             => left.X <= right.X && left.Y <= right.Y && left.Z <= right.Z;
 

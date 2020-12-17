@@ -17,5 +17,16 @@ namespace AdventOfCode2020.Day17
 
             return cube;
         }
+
+        public override Cube Apply(Dimension2 dimension, Cube cube)
+        {
+            var activeNeighbours = GetNeighboursInRange(dimension, cube)
+                .Count(x => x.Active);
+
+            if (activeNeighbours < 2 || activeNeighbours > 3)
+                return cube with {Active = false};
+
+            return cube;
+        }
     }
 }
