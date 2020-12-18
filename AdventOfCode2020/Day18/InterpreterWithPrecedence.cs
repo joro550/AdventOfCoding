@@ -71,7 +71,7 @@ namespace AdventOfCode2020.Day18
             while (_currentToken == Token.Multiply)
             {
                 Eat(Token.Multiply);
-                total *= Factor();
+                total *= Term();
             }
 
             return total;

@@ -110,6 +110,10 @@ namespace AdventOfCode2020.Tests.Day18
         
         [InlineData("1 + (2 * 3) + (4 * (5 + 6))", 51)]
         [InlineData("1 + 2 * 3 + 4 * 5 + 6", 231)]
+        [InlineData("2 * 3 + (4 * 5)", 46)]
+        [InlineData("5 + (8 * 3 + 9 + 3 * 4 * 3)", 1445)]
+        [InlineData("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))", 669060)]
+        [InlineData("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2", 23340)]
         [Theory]
         public void RunPrecedenceTests_WithBraces(string input, int expectedOutput)
         {
@@ -118,6 +122,23 @@ namespace AdventOfCode2020.Tests.Day18
                 .Run();
             
             Assert.Equal(expectedOutput, result);
+        }
+        
+        [Fact]
+        public void Puzzle2()
+        {
+            var results = new List<long>();
+            var input = new FileReader()
+                .GetResource("AdventOfCode2020.Tests.Day18.PuzzleInput.txt");
+            
+            foreach (var line in input.Split(Environment.NewLine))
+            {
+                var tokens = LanguageParser.Parse(line);
+                results.Add(new InterpreterWithPrecedence(tokens)
+                        .Run());
+            }
+
+            Assert.Equal(65658760783597, results.Sum());
         }
     }
 }
