@@ -1,4 +1,7 @@
-﻿using AdventOfCode2020.Day18;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AdventOfCode2020.Day18;
 using Xunit;
 
 namespace AdventOfCode2020.Tests.Day18
@@ -71,8 +74,50 @@ namespace AdventOfCode2020.Tests.Day18
         public void RunTests()
         {
             var tokens = LanguageParser.Parse("1+2");
-            var result = Interpreter.Run(tokens);
+            var result = new Interpreter(tokens).Run();
             Assert.Equal(3, result);
+        }
+        
+        [InlineData("(1+2)", 3)]
+        [InlineData("1+2+(2*3)", 9)]
+        [InlineData("2 * 3 + (4 * 5)", 26)]
+        [InlineData("5 + (8 * 3 + 9 + 3 * 4 * 3)", 437)]
+        [InlineData("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))", 12240)]
+        [InlineData("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2", 13632)]
+        [Theory]
+        public void RunTests_WithBraces(string input, int expectedOutput)
+        {
+            var tokens = LanguageParser.Parse(input);
+            var result = new Interpreter(tokens).Run();
+            Assert.Equal(expectedOutput, result);
+        }
+
+        [Fact]
+        public void Puzzle1()
+        {
+            var results = new List<long>();
+            var input = new FileReader()
+                .GetResource("AdventOfCode2020.Tests.Day18.PuzzleInput.txt");
+            
+            foreach (var line in input.Split(Environment.NewLine))
+            {
+                var tokens = LanguageParser.Parse(line);
+                results.Add(new Interpreter(tokens).Run());
+            }
+
+            Assert.Equal(2743012121210, results.Sum());
+        }
+        
+        [InlineData("1 + (2 * 3) + (4 * (5 + 6))", 51)]
+        [InlineData("1 + 2 * 3 + 4 * 5 + 6", 231)]
+        [Theory]
+        public void RunPrecedenceTests_WithBraces(string input, int expectedOutput)
+        {
+            var tokens = LanguageParser.Parse(input);
+            var result = new InterpreterWithPrecedence(tokens)
+                .Run();
+            
+            Assert.Equal(expectedOutput, result);
         }
     }
 }
