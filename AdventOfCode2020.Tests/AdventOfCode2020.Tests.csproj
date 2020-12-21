@@ -22,6 +22,9 @@
     <ItemGroup>
       <EmbeddedResource Include="Day11\PuzzleInput.txt" />
       <EmbeddedResource Include="Day14\PuzzleInput.txt" />
+      <EmbeddedResource Include="Day18\PuzzleInput.txt" />
+      <EmbeddedResource Include="Day18\PuzzleInput2.txt" />
+      <EmbeddedResource Include="Day19\PuzzleInput.txt" />
       <EmbeddedResource Include="Day2\PuzzleInput.txt" />
       <EmbeddedResource Include="Day3\PuzzleInput.txt" />
       <EmbeddedResource Include="Day4\PuzzleInput.txt" />
@@ -50,8 +53,15 @@
       <EmbeddedResource Include="Day16\PuzzleInput.txt" />
       <None Remove="Day17\PuzzleInput.txt" />
       <EmbeddedResource Include="Day17\PuzzleInput.txt" />
+<<<<<<< Updated upstream
       <None Remove="Day18\PuzzleInput.txt" />
       <EmbeddedResource Include="Day18\PuzzleInput.txt" />
+=======
+      <None Remove="Day18\Puzzle2Example.txt" />
+      <EmbeddedResource Include="Day18\Puzzle2Example.txt" />
+      <None Remove="Day19\Puzzle1Example.txt" />
+      <EmbeddedResource Include="Day19\Puzzle1Example.txt" />
+>>>>>>> Stashed changes
     </ItemGroup>
 
     <ItemGroup>
