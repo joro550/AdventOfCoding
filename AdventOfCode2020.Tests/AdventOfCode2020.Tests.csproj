@@ -52,6 +52,8 @@
       <EmbeddedResource Include="Day17\PuzzleInput.txt" />
       <None Remove="Day18\PuzzleInput.txt" />
       <EmbeddedResource Include="Day18\PuzzleInput.txt" />
+      <None Remove="Day21\PuzzleInput.txt" />
+      <EmbeddedResource Include="Day21\PuzzleInput.txt" />
     </ItemGroup>
 
     <ItemGroup>
