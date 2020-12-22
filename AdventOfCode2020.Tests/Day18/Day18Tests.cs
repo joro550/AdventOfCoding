@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-<<<<<<< Updated upstream
 using System.Linq;
 using AdventOfCode2020.Day18;
-=======
-using AdventOfCode2020.Day18;
 using AdventOfCode2020.Day18.Rules;
->>>>>>> Stashed changes
 using Xunit;
 
 namespace AdventOfCode2020.Tests.Day18
@@ -14,7 +10,6 @@ namespace AdventOfCode2020.Tests.Day18
     public class Day18Tests
     {
         [Fact]
-<<<<<<< Updated upstream
         public void ParserTests()
         {
             var tokens = LanguageParser.Parse("1+2");
@@ -83,7 +78,7 @@ namespace AdventOfCode2020.Tests.Day18
             var result = new Interpreter(tokens).Run();
             Assert.Equal(3, result);
         }
-        
+
         [InlineData("(1+2)", 3)]
         [InlineData("1+2+(2*3)", 9)]
         [InlineData("2 * 3 + (4 * 5)", 26)]
@@ -96,7 +91,8 @@ namespace AdventOfCode2020.Tests.Day18
             var tokens = LanguageParser.Parse(input);
             var result = new Interpreter(tokens).Run();
             Assert.Equal(expectedOutput, result);
-=======
+        }
+
         public void LetterRuleTest()
         {
             var record = RulesParser.ParseRules("5: \"b\"");
@@ -144,26 +140,10 @@ namespace AdventOfCode2020.Tests.Day18
             int messageCount = record.CountValidMessages("5", new List<string> {"b"});
         }
 
-        [Fact]
-        public void Puzzle1Example()
-        {
-            var input = @"0: 4 1 5
-1: 2 3 | 3 2
-2: 4 4 | 5 5
-3: 4 5 | 5 4
-4: ""a""
-5: ""b""";
-            var record = RulesParser.ParseRules(input);
-            var messages = @"ababbb|bababa|abbbab|aaabbb|aaaabbb".Split("|");
-            var count = record.CountValidMessages("0", messages);
-            Assert.Equal(2, count);
->>>>>>> Stashed changes
-        }
 
         [Fact]
         public void Puzzle1()
         {
-<<<<<<< Updated upstream
             var results = new List<long>();
             var input = new FileReader()
                 .GetResource("AdventOfCode2020.Tests.Day18.PuzzleInput.txt");
@@ -191,9 +171,6 @@ namespace AdventOfCode2020.Tests.Day18
                 .Run();
             
             Assert.Equal(expectedOutput, result);
-=======
-            var input = new FileReader()
-                .GetResource("AdventOfCode2020.Tests.Day18.PuzzleInput.txt");
             var pieces = input.Split(Environment.NewLine + Environment.NewLine);
             var record = RulesParser.ParseRules(pieces[0]);
             var count = record.CountValidMessages("0", pieces[1].Split(Environment.NewLine));
@@ -209,13 +186,11 @@ namespace AdventOfCode2020.Tests.Day18
             var record = RulesParser.ParseRules(pieces[0]);
             var count = record.CountValidMessages("0", pieces[1].Split(Environment.NewLine));
             Assert.Equal(12, count);
->>>>>>> Stashed changes
         }
         
         [Fact]
         public void Puzzle2()
         {
-<<<<<<< Updated upstream
             var results = new List<long>();
             var input = new FileReader()
                 .GetResource("AdventOfCode2020.Tests.Day18.PuzzleInput.txt");
@@ -228,14 +203,6 @@ namespace AdventOfCode2020.Tests.Day18
             }
 
             Assert.Equal(65658760783597, results.Sum());
-=======
-            var input = new FileReader()
-                .GetResource("AdventOfCode2020.Tests.Day18.PuzzleInput2.txt");
-            var pieces = input.Split(Environment.NewLine + Environment.NewLine);
-            var record = RulesParser.ParseRules(pieces[0]);
-            var count = record.CountValidMessages("0", pieces[1].Split(Environment.NewLine));
-            Assert.Equal(384, count);
->>>>>>> Stashed changes
         }
     }
 }
