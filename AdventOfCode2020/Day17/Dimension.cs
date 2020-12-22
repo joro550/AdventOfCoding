@@ -38,7 +38,7 @@ namespace AdventOfCode2020.Day17
             foreach (var (key, value) in Cubes) 
                 cubeList.Add(key, value);
 
-            foreach (var (key, cube) in Cubes)
+            foreach (var cube in Cubes.Values.Where(c => !c.HasGeneratedNeighbours))
             {
                 foreach (var position in cube.GetNeighbourCoordinates())
                 {
@@ -52,63 +52,6 @@ namespace AdventOfCode2020.Day17
 
             return cubeList;
         }
-        
-        
-        
-        public Dimension Simulate2()
-        {
-            var cubes = new Dictionary<string, Cube>();
-
-            //Create neighbours
-            GenerateNeighbours2();
-
-            foreach (var (_, cube) in Cubes)
-            {
-                foreach (var rule in _rules.Where(r => r.ShouldApply(cube)))
-                {
-                    var newCube = rule.Apply(this, cube);
-                    cubes.Add(newCube.Position.Base64Encode(), newCube);
-                }
-            }
-
-            return this with { Cubes = cubes };
-        }
-        
-        
-        private void GenerateNeighbours2()
-        {
-            var cubesWithoutGeneratedNeighbours = Cubes.Where(c => !c.Value.HasGeneratedNeighbours).ToArray();
-            
-            var seenPositions = new HashSet<Position>();
-            
-            for (var index = 0; index < cubesWithoutGeneratedNeighbours.Length; index++)
-            {
-                var cube = cubesWithoutGeneratedNeighbours[index];
-
-                foreach (var position in cube.Value.GetNeighbourCoordinates())
-                {
-                    if(seenPositions.Any(p => p == position))
-                        continue;
-
-                    seenPositions.Add(position);
-                    
-                    if(Cubes.Any(c => c.Value.Position == position))
-                        continue;
-
-
-                    var base64Encode = position.Base64Encode();
-                    try
-                    {
-                        Cubes.Add(base64Encode, Cube.CreateCube(position));
-                    }
-                    catch
-                    {
-                        
-                    }
-                }
-            }
-        }
-        
         
         public string Print()
         {
