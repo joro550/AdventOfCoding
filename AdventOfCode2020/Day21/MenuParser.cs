@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode2020.Day21
 {
-    public class MenuParser
+    public static class MenuParser
     {
         public static Menu Parse(string input)
         {
@@ -18,117 +19,88 @@ namespace AdventOfCode2020.Day21
 
     public record Menu(IEnumerable<FoodItem> Items)
     {
-        public Menu FindCommonAllergens()
+        public List<Ingredient> GetFoodWithNoAllergens()
         {
-            var foodItems = new List<FoodItem>();
-
-            foreach (var item in Items)
+            var ingredientMap = new Dictionary<string, List<Ingredient>>();
+            foreach (var (ingredients, allergens) in Items)
             {
-                var foodItem = item;
-                
-                foreach (var otherItem in Items.Where(i => i != item))
+                foreach (var allergen in allergens)
                 {
-                    foodItem = foodItem.RemoveCommonIngredients(otherItem);
-                }
+                    if (ingredientMap.ContainsKey(allergen.Name))
+                    {
+                        var ingredientList = ingredientMap[allergen.Name];
+                        var commonNames = new List<string>();
+                        
+                        foreach (var ingredient in ingredientMap[allergen.Name])
+                        {
+                            commonNames.AddRange(from i in ingredients 
+                                where ingredient.Name == i.Name 
+                                select ingredient.Name);
+                        }
 
-                foodItems.Add(foodItem);
-            }
+                        ingredientList.RemoveAll(x => commonNames.All(n => n != x.Name));
 
-            return new Menu(foodItems);
-        }
-
-        public List<string> GetIngredientsWithNoAllergens()
-        {
-            var ingrediants = new List<string>();
-            foreach (var foodItem in Items)
-            {
-                ingrediants.AddRange(foodItem.Ingredients.Where(ingredient => !ingredient.Allergen.Any()).Select(x=>x.Name));
-            }
-
-            return ingrediants.Distinct().ToList();
-        }
-
-
-        public int CountOccurances(List<string> names)
-        {
-            int count = 0;
-            foreach (var item in Items)
-            {
-                foreach (var name in names)
-                {
-                    count += item.Ingredients.Count(ingredient => ingredient.Name == name);
+                    }
+                    else
+                        ingredientMap.Add(allergen.Name, new List<Ingredient>(ingredients));
                 }
             }
 
-            return count;
+            while (ingredientMap.Select(x => x.Value).Any(v => v.Count > 1))
+            {
+                var mapWithOne = ingredientMap.Where(map => map.Value.Count == 1);
+                foreach (var (_, value) in mapWithOne)
+                {
+                    var toRemove = value.Single();
+                    foreach (var key in ingredientMap.Where(map => map.Value.Count > 1).Select(s => s.Key))
+                        ingredientMap[key].Remove(toRemove);
+                }
+            }
+
+            var values = ingredientMap.Values.Select(x => x.First()).Select(x => x.Name).ToArray();
+
+            var ingredientsWithNoAllergens = new List<Ingredient>();
+            foreach (var (ingredients, _) in Items)
+            {
+                ingredientsWithNoAllergens.AddRange(
+                    ingredients.Where(ingredient => values.All(x => x != ingredient.Name)));
+            }
+
+            return ingredientsWithNoAllergens.Distinct().ToList();
         }
-        
+
+        public int GetInstances(IEnumerable<string> names)
+        {
+            return Items.Sum(item => item.Ingredients.Count(ingredient => names.Any(x => x == ingredient.Name)));;
+        }
     }
 
-    public record FoodItem(List<Ingredient> Ingredients)
+    public record FoodItem(List<Ingredient> Ingredients, List<Allergen> Allergens)
     {
         public static FoodItem Parse(string item)
         {
             var values = item.Split("(");
 
-            var allergens = new List<Allergen>();
-            foreach (var val in values[1].Split(" ").Where(x=> x!= "contains"))
-            {
-                var allergen = val;
-                
-                if (val.Contains(","))
-                    allergen = allergen.Remove(val.IndexOf(",", StringComparison.Ordinal));
-                
-                if (val.Contains(")"))
-                    allergen = allergen.Remove(val.IndexOf(")", StringComparison.Ordinal));
-                
-                allergens.Add(new Allergen(allergen));
-            }
+            var allergenRegex = new Regex("[a-zA-Z]+");
+            var allergens = allergenRegex.Matches(values[1])
+                .Select(x => x.Value)
+                .Where(x => x != "contains")
+                .Select(val => new Allergen(val))
+                .ToList();
 
             var ingredientsList = values[0].Split(" ")
                 .Where(s => !string.IsNullOrEmpty(s))
-                .Select(ingredient => new Ingredient(ingredient, allergens))
+                .Select(ingredient => new Ingredient(ingredient))
                 .ToList();
 
-
-            return new FoodItem(ingredientsList);
-        }
-
-        public FoodItem RemoveCommonIngredients(FoodItem otherItem)
-        {
-            var foodItems = new List<Ingredient>();
-            
-            foreach (var ourIngredient in Ingredients)
-            {
-                Ingredient ingredient = ourIngredient;
-                var otherIngredient = otherItem.Ingredients.SingleOrDefault(x => x.Name == ourIngredient.Name);
-                
-                if (otherIngredient != null) 
-                    ingredient = ourIngredient.GetIngredients(otherIngredient);
-
-                foodItems.Add(ingredient);  
-            }
-
-            return new FoodItem(foodItems);
+            return new FoodItem(ingredientsList, new List<Allergen>(allergens));
         }
     }
 
-    public record Ingredient(string Name, List<Allergen> Allergen)
+    public record Ingredient(string Name);
+
+    public record Allergen(string Name)
     {
-        public Ingredient GetIngredients(Ingredient otherItem)
-        {
-            var allergens = new List<Allergen>();
-            foreach (var allergen in Allergen)
-            {
-                allergens.AddRange(from theirAllergens in otherItem.Allergen 
-                    where allergen == theirAllergens 
-                    select allergen);
-            }
-
-            return new Ingredient(Name, allergens);
-        }
-        
     }
-    public record Allergen(string Name);
 
 }

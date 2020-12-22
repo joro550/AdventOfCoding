@@ -15,10 +15,9 @@ sqjhc fvjkl (contains soy)
 sqjhc mxmxvkd sbzzf (contains fish)";
             
             var menu = MenuParser.Parse(input);
-            menu = menu.FindCommonAllergens();
+            var foodsWithNoAllergens = menu.GetFoodWithNoAllergens().Select(x => x.Name);
 
-            var ingredients = menu.GetIngredientsWithNoAllergens();
-            var count = menu.CountOccurances(ingredients);
+            var count = menu.GetInstances(foodsWithNoAllergens);
             Assert.Equal(5, count);
         }
         
@@ -28,11 +27,10 @@ sqjhc mxmxvkd sbzzf (contains fish)";
             var exampleInput = new FileReader()
                 .GetResource("AdventOfCode2020.Tests.Day21.PuzzleInput.txt");
             var menu = MenuParser.Parse(exampleInput);
-            menu = menu.FindCommonAllergens();
 
-            var ingredients = menu.GetIngredientsWithNoAllergens();
-            var count = menu.CountOccurances(ingredients);
-            Assert.Equal(5, ingredients.Count);
+            var foodsWithNoAllergens = menu.GetFoodWithNoAllergens().Select(x => x.Name);
+            var count = menu.GetInstances(foodsWithNoAllergens);
+            Assert.Equal(2779, count);
         }
     }
 }
