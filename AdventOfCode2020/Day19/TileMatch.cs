@@ -117,169 +117,100 @@ namespace AdventOfCode2020.Day19
 
         public static Dictionary<long, TileMatch> Handle(Dictionary<long, TileMatch> tileMatches)
         {
-            var startingTile = tileMatches.Values.First(x => x.Matches.Count == 2);
-            var ourTileId = tileMatches.Values.First(x => x.Matches.Count == 2).Tile.Id;
-            var cornerType = startingTile.GetCornerType();
-            
-            // Do the top/bottom row
-            var direction = cornerType == CornerType.TopLeft || cornerType == CornerType.BottomLeft
-                ? Side.Right
-                : Side.Left;
-            
-            var previousTile = startingTile;
-            var tile = tileMatches[startingTile.Matches[direction].Tile.Id];
-            do
+            // get top left tile
+            var topLeftTile = tileMatches.Values.Single(x =>
+                !x.Matches.ContainsKey(Side.Top) && x.Matches.ContainsKey(Side.Left));
+
+            // Orient the top row
+            var tile = topLeftTile;
+            var previousTile = tile;
+            while (tile != null)
             {
-                tileMatches[tile.Tile.Id] = tileMatches[tile.Tile.Id].HandleTopOrBottom(cornerType, previousTile.Tile.Id);
-                previousTile = tile;
+                tileMatches[tile.Tile.Id] = tile.HandleTopRow(previousTile.Tile.Id);
                 
-                tile = tile.Matches.ContainsKey(direction) ? tileMatches[tile.Matches[direction].Tile.Id] : null;
-            } while (tile != null);
-            
-            // Do the sides
-            var sideType = cornerType == CornerType.TopLeft || cornerType == CornerType.TopRight
-                ? Side.Left
-                : Side.Right;
-            
-            previousTile = startingTile;
-            tile = tileMatches[startingTile.Matches[direction].Tile.Id];
-            direction = cornerType == CornerType.TopLeft || cornerType == CornerType.TopRight
-                ? Side.Bottom
-                : Side.Top;
-            
-            do
-            {
-                tileMatches[tile.Tile.Id] = tileMatches[tile.Tile.Id].HandleLeftOrRight(cornerType, sideType, previousTile.Tile.Id);
-                previousTile = tile;
+                // Go down and turn tiles so they match
+                var cacheTile = tile;
+                for (; cacheTile != null;)
+                {
+                    tileMatches[cacheTile.Tile.Id] = cacheTile.HandlePiece(previousTile.Tile.Id);
+                    previousTile = cacheTile;
+                    
+                    cacheTile = cacheTile.Matches.ContainsKey(Side.Bottom) 
+                        ? tileMatches[cacheTile.Matches[Side.Bottom].Tile.Id] 
+                        : null;
+                }
                 
-                tile = tile.Matches.ContainsKey(direction) ? tileMatches[tile.Matches[direction].Tile.Id] : null;
-            } while (tile != null);
-            
-            
-            // Go vertically flipping things
-            var horizontal = cornerType == CornerType.TopLeft || cornerType == CornerType.BottomLeft
-                ? Side.Right
-                : Side.Left;
-            
-            tile = tileMatches[startingTile.Matches[direction].Tile.Id];
+                // Go to the next tile;
+                previousTile = tile;
+                tile = tile.Matches.ContainsKey(Side.Right) ? tileMatches[tile.Matches[Side.Right].Tile.Id] : null;
+            }
+
+
+            tile = tileMatches[topLeftTile.Matches[Side.Bottom].Tile.Id];
             previousTile = tile;
-            do
+
+            for (; tile != null;)
             {
                 var cacheTile = tile;
-                do
+                for (int x = 0; cacheTile != null;x ++)
                 {
-                    tileMatches[tile.Tile.Id] = tileMatches[tile.Tile.Id].HandleVerticalCenter(cornerType, previousTile.Tile.Id);
-                    previousTile = tile;
-                    tile = tile.Matches.ContainsKey(direction) ? tileMatches[tile.Matches[direction].Tile.Id] : null;
-                } while (tile != null);
+
+                    tileMatches[cacheTile.Tile.Id] = cacheTile.HandleHorizontal(x == 0, previousTile.Tile.Id);
+                    previousTile = cacheTile;
+                    
+                    cacheTile = cacheTile.Matches.ContainsKey(Side.Right) 
+                        ? tileMatches[cacheTile.Matches[Side.Right].Tile.Id] 
+                        : null;
+                }
                 
-
-                tile = cacheTile.Matches.ContainsKey(horizontal) ? tileMatches[cacheTile.Matches[horizontal].Tile.Id] : null;
-            } while (tile != null);
-            
-            // Go horizontal flipping things
-            tile = tileMatches[startingTile.Matches[direction].Tile.Id];
-            previousTile = tile;
-            do
-            {
-                var cacheTile = tile;
-                do
-                {
-                    tileMatches[tile.Tile.Id] = tileMatches[tile.Tile.Id]
-                        .HandleHorizontalCenter(cornerType, previousTile.Tile.Id);
-                    previousTile = tile;
-                    tile = tile.Matches.ContainsKey(horizontal) ? tileMatches[tile.Matches[horizontal].Tile.Id] : null;
-                } while (tile != null);
-
-
-                tile = cacheTile.Matches.ContainsKey(direction)
-                    ? tileMatches[cacheTile.Matches[direction].Tile.Id]
-                    : null;
-            } while (tile != null);
+                tile = tile.Matches.ContainsKey(Side.Bottom) ? tileMatches[tile.Matches[Side.Bottom].Tile.Id] : null;
+            }
 
             return tileMatches;
         }
+
+        private TileMatch HandleHorizontal(bool isSidePiece, long previousId)
+        {
+            switch (isSidePiece)
+            {
+                case true when !Matches.ContainsKey(Side.Left):
+                case false when Matches[Side.Left].Tile.Id != previousId:
+                    return FlipHorizontally();
+            }
+
+            return this;
+        }
         
-        private TileMatch HandleHorizontalCenter(CornerType cornerType, long id)
+        
+        private TileMatch HandlePiece(long previousId)
         {
-            var direction = cornerType == CornerType.TopLeft || cornerType == CornerType.BottomLeft
-                ? Side.Right
-                : Side.Left;
-            var tile = this;
+            var tileMatch = this;
 
-            if (!Matches.ContainsKey(direction) || Matches[direction].Tile.Id != id)
-                tile = tile.FlipHorizontally();
-            return tile;
+            var rotateCheck = Side.Top;
+
+            if (!tileMatch.Matches.ContainsKey(rotateCheck) ||
+                tileMatch.Matches.ContainsKey(rotateCheck) && tileMatch.Matches[rotateCheck].Tile.Id != previousId)
+            {
+                tileMatch = RotateUntil(rotateCheck, previousId);
+            }
+
+            return tileMatch;
         }
 
-        private TileMatch HandleVerticalCenter(CornerType cornerType, long id)
+        private TileMatch HandleTopRow(long leftId)
         {
-            var verticalDirection = cornerType == CornerType.TopLeft || cornerType == CornerType.TopRight
-                ? Side.Top
-                : Side.Bottom;
-            var tile = this;
-            if (!Matches.ContainsKey(verticalDirection) || Matches[verticalDirection].Tile.Id != id) 
-                tile = RotateUntil(verticalDirection, id);
-            return tile;
-        }
+            var tileMatch = this;
 
-        private TileMatch HandleLeftOrRight(CornerType cornerType, Side side, long id)
-        {
-            var verticalDirection = cornerType == CornerType.TopLeft || cornerType == CornerType.TopRight
-                ? Side.Top
-                : Side.Bottom;
-            var horizontalDirection = side == Side.Left ? Side.Left : Side.Right;
-             
-            var tile = this;
-            if (!Matches.ContainsKey(verticalDirection) || Matches[verticalDirection].Tile.Id != id) 
-                tile = RotateUntil(verticalDirection, id);
-            
-            if (tile.Matches.ContainsKey(horizontalDirection)) 
-                tile.FlipHorizontally();
-            return tile;
-        }
+            if (!tileMatch.Matches.ContainsKey(Side.Left) ||
+                tileMatch.Matches.ContainsKey(Side.Left) && tileMatch.Matches[Side.Left].Tile.Id != leftId)
+            {
+                tileMatch = RotateUntil(Side.Left, leftId);
+            }
 
+            if (tileMatch.Matches.ContainsKey(Side.Top)) 
+                tileMatch = FlipVertically();
 
-        private TileMatch HandleTopOrBottom(CornerType cornerType, long id)
-        {
-            var horizontalDirection = cornerType == CornerType.TopLeft || cornerType == CornerType.BottomLeft
-                ? Side.Left
-                : Side.Right;
-
-            var direction = cornerType == CornerType.TopLeft || cornerType == CornerType.TopRight
-                ? Side.Top
-                : Side.Bottom;
-
-            var tile = this;
-            if (!Matches.ContainsKey(horizontalDirection) || Matches[horizontalDirection].Tile.Id != id)
-                tile = RotateUntil(horizontalDirection, id);
-                
-            if (tile.Matches.ContainsKey(direction)) 
-                tile.FlipVertically();
-
-            return tile;
-        }
-
-
-        private CornerType GetCornerType()
-        {
-            if (!Matches.ContainsKey(Side.Left))
-                return Matches.ContainsKey(Side.Top) ? CornerType.BottomLeft : CornerType.TopLeft;
-            return Matches.ContainsKey(Side.Top) ? CornerType.BottomRight : CornerType.TopRight; 
-        }
-
-        private bool WeAreASidePiece()
-            => Matches.Count == 3;
-
-        private bool WeAreACornerPiece() 
-            => Matches.Count == 2;
-
-        private enum CornerType
-        {
-            TopLeft,
-            TopRight,
-            BottomLeft,
-            BottomRight
+            return tileMatch;
         }
     }
 }
