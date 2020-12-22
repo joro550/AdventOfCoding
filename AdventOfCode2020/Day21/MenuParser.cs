@@ -21,6 +21,20 @@ namespace AdventOfCode2020.Day21
     {
         public List<Ingredient> GetFoodWithNoAllergens()
         {
+            var foodWithAllergens = GetFoodWithAllergens().Values.Select(x => x.Name).ToList();
+
+            var ingredientsWithNoAllergens = new List<Ingredient>();
+            foreach (var (ingredients, _) in Items)
+            {
+                ingredientsWithNoAllergens.AddRange(
+                    ingredients.Where(ingredient => foodWithAllergens.All(x => x != ingredient.Name)));
+            }
+
+            return ingredientsWithNoAllergens.Distinct().ToList();
+        }
+        
+        public Dictionary<string, Ingredient> GetFoodWithAllergens()
+        {
             var ingredientMap = new Dictionary<string, List<Ingredient>>();
             foreach (var (ingredients, allergens) in Items)
             {
@@ -57,16 +71,10 @@ namespace AdventOfCode2020.Day21
                 }
             }
 
-            var values = ingredientMap.Values.Select(x => x.First()).Select(x => x.Name).ToArray();
-
-            var ingredientsWithNoAllergens = new List<Ingredient>();
-            foreach (var (ingredients, _) in Items)
-            {
-                ingredientsWithNoAllergens.AddRange(
-                    ingredients.Where(ingredient => values.All(x => x != ingredient.Name)));
-            }
-
-            return ingredientsWithNoAllergens.Distinct().ToList();
+            var finalDictionary = new Dictionary<string, Ingredient>();
+            foreach (var (key, value) in ingredientMap) 
+                finalDictionary.Add(key, value.First());
+            return finalDictionary;
         }
 
         public int GetInstances(IEnumerable<string> names)
