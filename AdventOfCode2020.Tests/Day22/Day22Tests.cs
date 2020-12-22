@@ -99,5 +99,51 @@ namespace AdventOfCode2020.Tests.Day22
             Assert.Equal(35005, player1.CalculateScore());
             Assert.Equal(0, player2.CalculateScore());
         }
+        
+        [Fact]
+        public void ScoreCalcTestPuzzle2()
+        {
+            var input = @"Player 1:|9|2|6|3|1||Player 2:|5|8|4|7|10".Replace("|", Environment.NewLine);
+            var (player1, player2) = DeckParser.Parse(input);
+            var game = new RecursiveCombat(new List<Player> {player1, player2});
+
+            while (!game.Complete())
+            {
+                game.PlayRound();
+            }
+
+            Assert.Equal(291, player2.CalculateScore());
+        }
+
+        [Fact]
+        public void TestInfiniteGame()
+        {
+            var input = @"Player 1:|43|19||Player 2:|2|29|14".Replace("|", Environment.NewLine);var (player1, player2) = DeckParser.Parse(input);
+            var game = new RecursiveCombat(new List<Player> {player1, player2});
+
+            while (!game.Complete())
+            {
+                game.PlayRound();
+            }
+
+            Assert.Equal(72, player2.CalculateScore());
+        }
+
+        [Fact]
+        public void Puzzle2()
+        {
+            var input = new FileReader()
+                .GetResource("AdventOfCode2020.Tests.Day22.PuzzleInput.txt");
+            
+            var (player1, player2) = DeckParser.Parse(input);
+            var game = new RecursiveCombat(new List<Player> {player1, player2});
+
+            while (!game.Complete())
+            {
+                game.PlayRound();
+            }
+            
+            Assert.Equal(9833, game.GetWinner().CalculateScore());
+        }
     }
 }

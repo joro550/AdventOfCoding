@@ -5,13 +5,13 @@ namespace AdventOfCode2020.Day22
 {
     public record Game(List<Player> Players)
     {
-        public bool Complete()
+        public virtual bool Complete()
         {
             var playersWithCards = Players.Count(p => p.Deck.Cards.Any());
             return playersWithCards == 1;
         }
         
-        public void PlayRound()
+        public virtual void PlayRound()
         {
             var cards = Players.Select(p => p.GetNextCard());
             var highestCards = cards.OrderByDescending(i => i.Number).ToList();

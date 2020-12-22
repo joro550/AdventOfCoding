@@ -10,6 +10,11 @@ namespace AdventOfCode2020.Day22
                 ? null 
                 : new Card(Id, Deck.Cards.Pop());
 
+        public (long Id, long card) GetNextCard2()
+        {
+            return !Deck.Cards.Any() ? (0, 0) : (Id, Deck.Cards.Pop());
+        }
+
         public void AddCardToDeck(IEnumerable<Card> cards)
         {
             foreach (var (_, number) in cards) 
@@ -33,5 +38,9 @@ namespace AdventOfCode2020.Day22
 
             return score;
         }
+
+
+        public Player DeepCopy() 
+            => new(Id, Deck.DeepCopy());
     }
 }
