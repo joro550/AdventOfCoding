@@ -41,7 +41,40 @@ namespace AdventOfCode2020.Tests.Day23
         }
 
         [Fact]
+        public void Speeeeed()
+        {
+            var cups = CupParser.Parse("394618527");
+            var crabCups = new CrabCups(cups);
+
+            for (var i = 0; i < 10000000; i++)
+            {
+                crabCups.PlayRound();
+            }
+
+            var finalPosition = crabCups.GetState();
+            var s = finalPosition.Aggregate(string.Empty, (current, value) => current + $", {value}");
+            // Assert.Equal(", 2, 3, 4, 1, 7, 8, 5, 6, 9", s);
+        }
+        
+        
+        [Fact]
         public void Puzzle1()
+        {
+            var cups = CupParser.Parse("394618527");
+            var crabCups = new CrabCups(cups);
+
+            for (var i = 0; i < 100; i++)
+            {
+                crabCups.PlayRound();
+            }
+
+            var finalPosition = crabCups.GetState();
+            var s = finalPosition.Aggregate(string.Empty, (current, value) => current + $", {value}");
+            Assert.Equal(", 2, 3, 4, 1, 7, 8, 5, 6, 9", s);
+        }
+
+        [Fact]
+        public void Puzzle2()
         {
             var cups = CupParser.Parse("394618527");
             var currentCups = cups.GetCurrentCups();
