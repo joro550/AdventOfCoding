@@ -85,44 +85,48 @@ namespace AdventOfCode2020.Day23
 
         public void PlaceCupsDown(long destination, long[] cups)
         {
-            var newNewCircle = new long[_originalSize];
+            var newCircle = new long[_originalSize];
 
-            // place cups in new positions
-            for(int i = _currentPosition, arrayPosition = 0;  arrayPosition < _currentCollection.Length; i++,arrayPosition++)
+            int Increase(int position, int size)
             {
-                if (i >= _originalSize)
-                    i = 0;
-                
-                newNewCircle[i] = _currentCollection[arrayPosition];
+                var toReturn = position + 1;
+                if (toReturn >= size)
+                    toReturn = 0;
+                return toReturn;
             }
+
+            var destinationIndex = GetDestinationIndex(destination, _currentCollection);
             
-            // Add the picked up cups after the destination
-            var destinationIndex = GetDestinationIndex(destination, newNewCircle)+1;
-            for (var i = 0; i < cups.Length; i++, destinationIndex ++)
+            for (int i = 0, currentPosition = _currentPosition, newArrayPosition = _currentPosition; 
+                i < _currentCollection.Length; 
+                i++, 
+                currentPosition = Increase(currentPosition, _currentCollection.Length), 
+                newArrayPosition = Increase(newArrayPosition, _originalSize))
             {
-                if (destinationIndex >= _originalSize)
-                    destinationIndex = 0;
-
-                // Shift values to the right
-                var cache = newNewCircle.ToArray();
                 
-                for (int j = destinationIndex, newIndex = destinationIndex + 1; newIndex != destinationIndex; j++, newIndex++)
+                if (currentPosition == destinationIndex)
                 {
-                    if (newIndex >= _originalSize) 
-                        newIndex = 0;
+                    newCircle[newArrayPosition] = destination;
+                    newArrayPosition = Increase(newArrayPosition, _originalSize);
+                    
+                    foreach (var cup in cups)
+                    {
+                        newCircle[newArrayPosition] = cup;
+                        newArrayPosition = Increase(newArrayPosition, _originalSize);
+                    }
 
-                    if (j >= _originalSize)
-                        j = 0;
-
-                    newNewCircle[newIndex] = cache[j];
+                    if(newArrayPosition != _originalSize)
+                        newArrayPosition--;
+                    
+                    continue;
                 }
-                
-                newNewCircle[destinationIndex] = cups[i];
+
+                newCircle[newArrayPosition] = _currentCollection[currentPosition];
             }
             
             
             Array.Resize(ref _currentCollection, _originalSize);
-            _currentCollection = newNewCircle.ToArray();
+            _currentCollection = newCircle.ToArray();
         }
 
         private int GetDestinationIndex(long destination, long[] listToSearch)
