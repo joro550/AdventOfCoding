@@ -19,7 +19,7 @@ namespace AdventOfCode2020.Day23
 
         public CrabCups(IEnumerable<long> cups)
         {
-            _cups = new CupCollection(cups));
+            _cups = new CupCollection(cups);
         }
 
         public void PlayRound()
