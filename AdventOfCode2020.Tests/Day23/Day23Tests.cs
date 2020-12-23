@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AdventOfCode2020.Day23;
 using Xunit;
 using Xunit.Abstractions;
@@ -36,6 +38,32 @@ namespace AdventOfCode2020.Tests.Day23
             Assert.Equal(9, finalPosition[6]);
             Assert.Equal(2, finalPosition[7]);
             Assert.Equal(6, finalPosition[8]);
+        }
+
+        [Fact]
+        public void Puzzle1()
+        {
+            var cups = CupParser.Parse("394618527");
+            var currentCups = cups.GetCurrentCups();
+            var maxCup = currentCups.Max();
+
+            var allCups = new List<long>(currentCups);
+            for (long i = 0, cupNumber = maxCup; i < 1000000 - currentCups.Length; i++, maxCup++)
+            {
+                allCups.Add(cupNumber);
+            }
+
+
+            var crabCups = new CrabCups(allCups);
+
+            for (var i = 0; i < 10000000; i++)
+            {
+                crabCups.PlayRound();
+            }
+
+            var finalPosition = crabCups.GetState();
+            var s = finalPosition.Aggregate(string.Empty, (current, value) => current + $", {value}");
+            _testOutputHelper.WriteLine(s);
         }
     }
 }

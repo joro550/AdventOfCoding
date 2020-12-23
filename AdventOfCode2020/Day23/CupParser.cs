@@ -17,6 +17,11 @@ namespace AdventOfCode2020.Day23
         public CrabCups(CupCollection cups) 
             => _cups = cups;
 
+        public CrabCups(IEnumerable<long> cups)
+        {
+            _cups = new CupCollection(cups));
+        }
+
         public void PlayRound()
         {
             var currentCupId = _cups.GetCurrentCup();
@@ -37,6 +42,8 @@ namespace AdventOfCode2020.Day23
         private long[] _currentCollection;
         private int _currentPosition;
         private readonly int _originalSize;
+        
+        
 
         public CupCollection(IEnumerable<long> cups)
         {
@@ -94,61 +101,44 @@ namespace AdventOfCode2020.Day23
                 return toReturn;
             }
 
-            var destinationIndex = GetDestinationIndex(destination, _currentCollection);
-
-
             var currentPosition = _currentPosition >= _currentCollection.Length
-                ? _currentPosition - _currentCollection.Length
+                ? _currentCollection.Length - 1
                 : _currentPosition;
-            
-            
             
             var newArrayPosition = _currentPosition == _originalSize ? 0 : _currentPosition;
             
             for (var i = 0; 
-                i < _currentCollection.Length; 
+                i <= _currentCollection.Length; 
                 i++, 
                 currentPosition = Increase(currentPosition, _currentCollection.Length), 
                 newArrayPosition = Increase(newArrayPosition, _originalSize))
             {
-                
-                if (currentPosition == destinationIndex)
+                // Check to see if the last number we added was the "destination"
+                var positionToCheck = newArrayPosition - 1 < 0 ? newCircle.Length - 1 : newArrayPosition - 1; 
+                if (newCircle[positionToCheck] == destination)
                 {
-                    newCircle[newArrayPosition] = destination;
-                    newArrayPosition = Increase(newArrayPosition, _originalSize);
-                    
+                    // If it was we need to add the picked up cups here
                     foreach (var cup in cups)
                     {
                         newCircle[newArrayPosition] = cup;
                         newArrayPosition = Increase(newArrayPosition, _originalSize);
                     }
-
-                    if(newArrayPosition != _originalSize)
-                        newArrayPosition--;
+                    
+                    // Add from the remaining cups on the floor
+                    if(i < _currentCollection.Length)
+                        newCircle[newArrayPosition] = _currentCollection[currentPosition];
                     
                     continue;
                 }
-
-                newCircle[newArrayPosition] = _currentCollection[currentPosition];
+                
+                // Add from the remaining cups on the floor
+                if(i < _currentCollection.Length)
+                    newCircle[newArrayPosition] = _currentCollection[currentPosition];
             }
             
             
             Array.Resize(ref _currentCollection, _originalSize);
             _currentCollection = newCircle.ToArray();
-        }
-
-        private int GetDestinationIndex(long destination, long[] listToSearch)
-        {
-            var destinationIndex = 0;
-            for (var i = 0; i < listToSearch.Length; i++)
-            {
-                if (listToSearch[i] != destination)
-                    continue;
-
-                destinationIndex = i;
-                break;
-            }
-            return destinationIndex;
         }
 
         public long GetDestination(long id, IEnumerable<long> pickedUpCups)
