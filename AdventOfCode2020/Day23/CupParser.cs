@@ -47,7 +47,8 @@ namespace AdventOfCode2020.Day23
         public long[] PickUpCups()
         {
             var pickedUpCups = new List<long>();
-            
+            var positionsToPickup = new List<int>();
+
             // Pick up cups
             for (int i = 0, positionToPickUp = _currentPosition + 1; i < Moves; i++, positionToPickUp++)
             {
@@ -55,18 +56,16 @@ namespace AdventOfCode2020.Day23
                     positionToPickUp = 0;
 
                 pickedUpCups.Add(_currentCollection[positionToPickUp]);
+                positionsToPickup.Add(positionToPickUp);
             }
 
             // Reposition array
             var newLength = _currentCollection.Length - Moves;
             var newCircle = new long[newLength];
             
-            for (int i = 0, replaceVal = 0, positionToPickUp = _currentPosition + 1; replaceVal < newLength; i++)
+            for (int i = 0, replaceVal = 0; replaceVal < newLength; i++)
             {
-                if (positionToPickUp >= _currentCollection.Length)
-                    break;
-            
-                if (i >= positionToPickUp && i < positionToPickUp + Moves)
+                if (positionsToPickup.Any(x => x == i))
                     continue;
             
                 if (i >= _currentCollection.Length)
@@ -96,8 +95,17 @@ namespace AdventOfCode2020.Day23
             }
 
             var destinationIndex = GetDestinationIndex(destination, _currentCollection);
+
+
+            var currentPosition = _currentPosition >= _currentCollection.Length
+                ? _currentPosition - _currentCollection.Length
+                : _currentPosition;
             
-            for (int i = 0, currentPosition = _currentPosition, newArrayPosition = _currentPosition; 
+            
+            
+            var newArrayPosition = _currentPosition == _originalSize ? 0 : _currentPosition;
+            
+            for (var i = 0; 
                 i < _currentCollection.Length; 
                 i++, 
                 currentPosition = Increase(currentPosition, _currentCollection.Length), 
@@ -152,7 +160,7 @@ namespace AdventOfCode2020.Day23
             while (cupsToExclude.Any(x=> x == returnId) || _currentCollection.All(x => x != returnId))
             {
                 returnId--;
-                if (returnId == 0)
+                if (returnId <= 0)
                     returnId = max;
             }
 
