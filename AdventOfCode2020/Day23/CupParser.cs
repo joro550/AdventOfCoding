@@ -21,7 +21,7 @@ namespace AdventOfCode2020.Day23
         {
             var currentCupId = _cups.GetCurrentCup();
             var cupsPickedUp = _cups.PickUpCups();
-            var destination = _cups.GetDestination(currentCupId);
+            var destination = _cups.GetDestination(currentCupId, cupsPickedUp);
 
             _cups.PlaceCupsDown(destination, cupsPickedUp);
             _cups.IncreasePosition();
@@ -35,10 +35,14 @@ namespace AdventOfCode2020.Day23
     {
         private const int Moves = 3;
         private long[] _currentCollection;
-        private int _currentPosition = 0;
+        private int _currentPosition;
+        private readonly int _originalSize;
 
-        public CupCollection(IEnumerable<long> cups) 
-            => _currentCollection = cups.ToArray();
+        public CupCollection(IEnumerable<long> cups)
+        {
+            _currentCollection = cups.ToArray();
+            _originalSize = _currentCollection.Length;
+        }
 
         public long[] PickUpCups()
         {
@@ -56,22 +60,22 @@ namespace AdventOfCode2020.Day23
             // Reposition array
             var newLength = _currentCollection.Length - Moves;
             var newCircle = new long[newLength];
-
+            
             for (int i = 0, replaceVal = 0, positionToPickUp = _currentPosition + 1; replaceVal < newLength; i++)
             {
                 if (positionToPickUp >= _currentCollection.Length)
                     break;
-
+            
                 if (i >= positionToPickUp && i < positionToPickUp + Moves)
                     continue;
-
+            
                 if (i >= _currentCollection.Length)
                     break;
-
+            
                 newCircle[replaceVal] = _currentCollection[i];
                 replaceVal++;
             }
-
+            
             Array.Resize(ref _currentCollection, _currentCollection.Length - 3);
             _currentCollection = newCircle;
             
@@ -81,37 +85,67 @@ namespace AdventOfCode2020.Day23
 
         public void PlaceCupsDown(long destination, long[] cups)
         {
-            var newLength = _currentCollection.Length + cups.Length;
-            var newCircle = new long[newLength];
+            var newNewCircle = new long[_originalSize];
 
-            for (int i = 0, newArrayPosition =0; i < _currentCollection.Length; i++, newArrayPosition++)
+            // place cups in new positions
+            for(int i = _currentPosition, arrayPosition = 0;  arrayPosition < _currentCollection.Length; i++,arrayPosition++)
             {
-                if (_currentCollection[i] == destination)
-                {
-                    newCircle[newArrayPosition] = _currentCollection[i];
-                    newArrayPosition++;
-                    
-                    foreach (var cup in cups)
-                    {
-                        newCircle[newArrayPosition] = cup;
-                        newArrayPosition++;
-                    }
-                    newArrayPosition--;
-                    continue;
-                }
+                if (i >= _originalSize)
+                    i = 0;
                 
-                newCircle[newArrayPosition] = _currentCollection[i];
+                newNewCircle[i] = _currentCollection[arrayPosition];
             }
             
-            Array.Resize(ref _currentCollection, newLength);
-            _currentCollection = newCircle;
+            // Add the picked up cups after the destination
+            var destinationIndex = GetDestinationIndex(destination, newNewCircle)+1;
+            for (var i = 0; i < cups.Length; i++, destinationIndex ++)
+            {
+                if (destinationIndex >= _originalSize)
+                    destinationIndex = 0;
+
+                // Shift values to the right
+                var cache = newNewCircle.ToArray();
+                
+                for (int j = destinationIndex, newIndex = destinationIndex + 1; newIndex != destinationIndex; j++, newIndex++)
+                {
+                    if (newIndex >= _originalSize) 
+                        newIndex = 0;
+
+                    if (j >= _originalSize)
+                        j = 0;
+
+                    newNewCircle[newIndex] = cache[j];
+                }
+                
+                newNewCircle[destinationIndex] = cups[i];
+            }
+            
+            
+            Array.Resize(ref _currentCollection, _originalSize);
+            _currentCollection = newNewCircle.ToArray();
         }
 
-        public long GetDestination(long id)
+        private int GetDestinationIndex(long destination, long[] listToSearch)
         {
-            var max = _currentCollection.Max();
+            var destinationIndex = 0;
+            for (var i = 0; i < listToSearch.Length; i++)
+            {
+                if (listToSearch[i] != destination)
+                    continue;
+
+                destinationIndex = i;
+                break;
+            }
+            return destinationIndex;
+        }
+
+        public long GetDestination(long id, IEnumerable<long> pickedUpCups)
+        {
             var returnId = id - 1;
-            while (_currentCollection.All(x => x != returnId))
+            var max = _currentCollection.Max();
+            var cupsToExclude = pickedUpCups.ToArray();
+            
+            while (cupsToExclude.Any(x=> x == returnId) || _currentCollection.All(x => x != returnId))
             {
                 returnId--;
                 if (returnId == 0)
