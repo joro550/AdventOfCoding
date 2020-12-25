@@ -107,7 +107,7 @@ namespace AdventOfCode2020.Tests.Day19
                 .GetResource("AdventOfCode2020.Tests.Day19.PuzzleInput.txt");
             var tiles = TileParser.Parse(input);
             var matches = EdgeMatchFinder.FindMatchingEdges(tiles);
-            
+            var map = MapBuilder.BuildMap(matches);
             
 
             var corners = matches.Where(x => x.Matches.Count == 2);

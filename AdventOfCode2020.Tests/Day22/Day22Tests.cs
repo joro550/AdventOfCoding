@@ -126,7 +126,7 @@ namespace AdventOfCode2020.Tests.Day22
                 game.PlayRound();
             }
 
-            Assert.Equal(72, player2.CalculateScore());
+            Assert.Equal(78, player2.CalculateScore());
         }
 
         [Fact]
@@ -142,6 +142,8 @@ namespace AdventOfCode2020.Tests.Day22
             {
                 game.PlayRound();
             }
+
+            Assert.Equal(1800, game.Rounds);
             
             Assert.Equal(9833, game.GetWinner().CalculateScore());
         }

@@ -11,19 +11,21 @@ namespace AdventOfCode2020.Day22
         }
 
         private static LifoStack<long> Longs(IEnumerable<long> cards) 
-            => new(cards);
+            => new(new LifoStack<long>(cards));
 
         public bool Compare(IEnumerable<long> cards)
         {
             var otherCards = cards.ToArray();
             var ourCards = Cards.ToArray();
             
-            if (otherCards.Length == ourCards.Length)
+            if (otherCards.Length != ourCards.Length)
                 return false;
-            return !otherCards.Where((t, i) => t != ourCards[i]).Any();
+            return !ourCards.Where((t, i) => t != otherCards[i]).Any();
         }
 
-        public Deck DeepCopy() 
-            => new Deck(new LifoStack<long>(Cards));
+        public Deck DeepCopy()
+        {
+            return new(new LifoStack<long>(Cards));
+        }
     }
 }

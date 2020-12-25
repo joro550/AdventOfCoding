@@ -22,7 +22,6 @@
     <ItemGroup>
       <EmbeddedResource Include="Day11\PuzzleInput.txt" />
       <EmbeddedResource Include="Day14\PuzzleInput.txt" />
-      <EmbeddedResource Include="Day24\PuzzleInput.txt" />
       <EmbeddedResource Include="Day2\PuzzleInput.txt" />
       <EmbeddedResource Include="Day3\PuzzleInput.txt" />
       <EmbeddedResource Include="Day4\PuzzleInput.txt" />
@@ -57,8 +56,6 @@
       <EmbeddedResource Include="Day21\PuzzleInput.txt" />
       <None Remove="Day22\PuzzleInput.txt" />
       <EmbeddedResource Include="Day22\PuzzleInput.txt" />
-      <None Remove="Day24\PuzzleExample.txt" />
-      <EmbeddedResource Include="Day24\PuzzleExample.txt" />
     </ItemGroup>
 
     <ItemGroup>

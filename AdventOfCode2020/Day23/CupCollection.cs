@@ -4,60 +4,61 @@ using System.Linq;
 
 namespace AdventOfCode2020.Day23
 {
-    public record CupCollection
+    public record CupCollection : ICupCollection
     {
         private const int Moves = 3;
-        private long[] _currentCollection;
+        private HashSet<int> _currentCollection;
         private int _currentPosition;
         private readonly int _originalSize;
         
-        public CupCollection(IEnumerable<long> cups)
+        public CupCollection(IEnumerable<int> cups)
         {
-            _currentCollection = cups.ToArray();
-            _originalSize = _currentCollection.Length;
+            _currentCollection = new HashSet<int>(cups);
+            _originalSize = _currentCollection.Count;
         }
 
-        public long[] PickUpCups()
+        public int[] PickUpCups(in int moves)
         {
-            var pickedUpCups = new List<long>();
+            var pickedUpCups = new List<int>();
             var positionsToPickup = new HashSet<int>();
+            var currentCollection = _currentCollection.ToArray();
 
             // Pick up cups
-            for (int i = 0, positionToPickUp = _currentPosition + 1; i < Moves; i++, positionToPickUp++)
+            for (int i = 0, positionToPickUp = _currentPosition + 1; i < moves; i++, positionToPickUp++)
             {
-                if (positionToPickUp >= _currentCollection.Length)
+                if (positionToPickUp >= currentCollection.Length)
                     positionToPickUp = 0;
 
-                pickedUpCups.Add(_currentCollection[positionToPickUp]);
+                pickedUpCups.Add(currentCollection[positionToPickUp]);
                 positionsToPickup.Add(positionToPickUp);
             }
 
             // Reposition array
-            var newLength = _currentCollection.Length - Moves;
-            var newCircle = new long[newLength];
+            var newLength = currentCollection.Length - moves;
+            var newCircle = new int[newLength];
             
             for (int i = 0, replaceVal = 0; replaceVal < newLength; i++)
             {
                 if (positionsToPickup.TryGetValue(i, out _))
                     continue;
             
-                if (i >= _currentCollection.Length)
+                if (i >= currentCollection.Length)
                     break;
-            
-                newCircle[replaceVal] = _currentCollection[i];
+
+                newCircle[replaceVal] = currentCollection[i];
                 replaceVal++;
             }
-            
-            Array.Resize(ref _currentCollection, _currentCollection.Length - 3);
-            _currentCollection = newCircle;
+
+            _currentCollection = new HashSet<int>(newCircle);
             
             // Return the picked up cups
             return pickedUpCups.ToArray();
         }
 
-        public void PlaceCupsDown(long destination, long[] cups)
+        public void PlaceCupsDown(in int destination, in int[] cups)
         {
-            var newCircle = new long[_originalSize];
+            var newCircle = new int[_originalSize];
+            var currentCollection = _currentCollection.ToArray();
 
             static int Increase(int position, int size)
             {
@@ -67,16 +68,16 @@ namespace AdventOfCode2020.Day23
                 return toReturn;
             }
 
-            var currentPosition = _currentPosition >= _currentCollection.Length
-                ? _currentCollection.Length - 1
+            var currentPosition = _currentPosition >= currentCollection.Length
+                ? currentCollection.Length - 1
                 : _currentPosition;
             
             var newArrayPosition = _currentPosition == _originalSize ? 0 : _currentPosition;
             
             for (var i = 0; 
-                i <= _currentCollection.Length; 
+                i <= currentCollection.Length; 
                 i++, 
-                currentPosition = Increase(currentPosition, _currentCollection.Length), 
+                currentPosition = Increase(currentPosition, currentCollection.Length), 
                 newArrayPosition = Increase(newArrayPosition, _originalSize))
             {
                 // Check to see if the last number we added was the "destination"
@@ -91,26 +92,24 @@ namespace AdventOfCode2020.Day23
                     }
                     
                     // Add from the remaining cups on the floor
-                    if(i < _currentCollection.Length)
-                        newCircle[newArrayPosition] = _currentCollection[currentPosition];
+                    if(i < currentCollection.Length)
+                        newCircle[newArrayPosition] = currentCollection[currentPosition];
                     
                     continue;
                 }
                 
                 // Add from the remaining cups on the floor
-                if(i < _currentCollection.Length)
-                    newCircle[newArrayPosition] = _currentCollection[currentPosition];
+                if(i < currentCollection.Length)
+                    newCircle[newArrayPosition] = currentCollection[currentPosition];
             }
             
-            
-            Array.Resize(ref _currentCollection, _originalSize);
-            _currentCollection = newCircle.ToArray();
+            _currentCollection = new HashSet<int>(newCircle);
         }
 
-        public long GetDestination(long id)
+        public int GetDestination(in int id)
         {
             var returnId = id - 1;
-            while (_currentCollection.All(x => x != returnId))
+            while (!_currentCollection.TryGetValue(returnId, out _))
             {
                 returnId--;
                 if (returnId <= 0)
@@ -120,17 +119,17 @@ namespace AdventOfCode2020.Day23
             return returnId;
         }
 
-        public long GetCurrentCup() 
-            => _currentCollection[_currentPosition];
+        public int GetCurrentCup()
+            => _currentCollection.ElementAt(_currentPosition);
 
         public void IncreasePosition()
         {
             _currentPosition++;
-            if (_currentPosition >= _currentCollection.Length)
+            if (_currentPosition >= _currentCollection.Count)
                 _currentPosition = 0;
         }
 
-        public long[] GetCurrentCups() 
-            => _currentCollection;
+        public int[] GetCurrentCups(in int fromCupNumber) 
+            => _currentCollection.ToArray();
     }
 }

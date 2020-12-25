@@ -8,6 +8,7 @@ namespace AdventOfCode2020.Day22
         private Player _winner;
         private bool _isComplete;
         private readonly Dictionary<long, List<Deck>> _decksSeen =new();
+        public long Rounds = 0;
 
         public RecursiveCombat(IEnumerable<Player> players)
             : this(players.ToDictionary(player => player.Id))
@@ -37,38 +38,52 @@ namespace AdventOfCode2020.Day22
             }
             
             // Get the next cards
-            var cards = Players.Select(p => p.Value.GetNextCard()).ToArray();
+            var cards = Players.Select(p => p.Value.GetNextCard()).ToDictionary(x => x.Owner);
             
-            // If both players have enough cards then we need to lay down a sub game
-            var shouldRecurse = true;
-            foreach (var card in cards)
-            {
-                var player = Players[card.Owner];
-                if(player.Deck.Cards.Count() < card.Number)
-                    shouldRecurse = false;
-            }
-
             // play the sub game
-            if (shouldRecurse)
+            var cardArray = cards.Values.ToArray();
+            if (ShouldPlaySubGame(cardArray))
             {
-                var subGame = CopyFrom(this);
-                while (!subGame.Complete())
-                {
-                    subGame.PlayRound();
-                }
-
-                var winner = Players[subGame.GetWinner().Id];
-                winner.AddCardToDeck(cards.Where(x=> x.Owner == winner.Id));
-                winner.AddCardToDeck(cards.Where(x=> x.Owner != winner.Id));
+                PlaySubGame(cardArray);
                 return;
             }
             
             // We don't have enough cards to keep recurse
-            var highestCards = cards.OrderByDescending(i => i.Number).ToList();
-            var playerId = highestCards.Take(1).Single().Owner;
+            var highestCards = cards.OrderByDescending(i => i.Value.Number).ToArray();
+            var playerId = highestCards[0].Value.Owner;
             
             var owner = Players[playerId];
-            owner.AddCardToDeck(highestCards);
+            owner.AddCardToDeck(highestCards.Select(x => x.Value));
+            Rounds++;
+        }
+
+        private bool ShouldPlaySubGame(IEnumerable<Card> cards)
+        {
+            var shouldRecurse = true;
+            // If both players have enough cards then we need to lay down a sub game
+            foreach (var (owner, number) in cards)
+            {
+                var player = Players[owner];
+                if (player.Deck.Cards.Count() < number)
+                    shouldRecurse = false;
+            }
+
+            return shouldRecurse;
+        }
+
+        private void PlaySubGame(Card[] cards)
+        {
+            var subGame = CopyFrom(this);
+            while (!subGame.Complete())
+            {
+                subGame.PlayRound();
+            }
+
+            var winner = Players[subGame.GetWinner().Id];
+            winner.AddCardToDeck(cards.Where(x => x.Owner == winner.Id));
+            winner.AddCardToDeck(cards.Where(x => x.Owner != winner.Id));
+            Rounds += subGame.Rounds;
+            return;
         }
 
         private bool HasDeckBeenSeen()
@@ -77,14 +92,15 @@ namespace AdventOfCode2020.Day22
             {
                 if (!_decksSeen.ContainsKey(id))
                 {
-                    _decksSeen.Add(id, new List<Deck> {playerDeck.Deck});
+                    _decksSeen.Add(id, new List<Deck> {playerDeck.Deck.DeepCopy()});
                     continue;
                 }
 
                 var seenDecks = _decksSeen[id];
                 if (!seenDecks.Any(deck => playerDeck.Deck.Compare(deck.Cards)))
                 {
-                    _decksSeen[id].Add(playerDeck.Deck);
+                    _decksSeen[id].Add(playerDeck.Deck.DeepCopy());
+                    continue;
                 }
                 
                 // If we've seen this deck before then player 1 is the winner

@@ -25,10 +25,10 @@ namespace AdventOfCode2020.Tests.Day23
             for (var i = 0; i < 10; i++)
             {
                 _testOutputHelper.WriteLine($"Iteration: {i}");
-                crabCups.PlayRound();
+                crabCups.PlayRound(3);
             }
 
-            var finalPosition = crabCups.GetState();
+            var finalPosition = crabCups.GetState(5);
             Assert.Equal(5, finalPosition[0]);
             Assert.Equal(8, finalPosition[1]);
             Assert.Equal(3, finalPosition[2]);
@@ -43,15 +43,18 @@ namespace AdventOfCode2020.Tests.Day23
         [Fact]
         public void Speeeeed()
         {
-            var cups = CupParser.Parse("394618527");
-            var crabCups = new CrabCups(cups);
+            var cupList = new List<int>();
+            for (var i = 0; i < 19000; i++) 
+                cupList.Add(i);
 
-            for (var i = 0; i < 10000000; i++)
+            var crabCups = new CrabCups(cupList);
+
+            for (var i = 0; i < 10000; i++)
             {
-                crabCups.PlayRound();
+                crabCups.PlayRound(3);
             }
 
-            var finalPosition = crabCups.GetState();
+            var finalPosition = crabCups.GetState(2);
             var s = finalPosition.Aggregate(string.Empty, (current, value) => current + $", {value}");
             // Assert.Equal(", 2, 3, 4, 1, 7, 8, 5, 6, 9", s);
         }
@@ -65,10 +68,10 @@ namespace AdventOfCode2020.Tests.Day23
 
             for (var i = 0; i < 100; i++)
             {
-                crabCups.PlayRound();
+                crabCups.PlayRound(3);
             }
 
-            var finalPosition = crabCups.GetState();
+            var finalPosition = crabCups.GetState(2);
             var s = finalPosition.Aggregate(string.Empty, (current, value) => current + $", {value}");
             Assert.Equal(", 2, 3, 4, 1, 7, 8, 5, 6, 9", s);
         }
@@ -76,27 +79,18 @@ namespace AdventOfCode2020.Tests.Day23
         [Fact]
         public void Puzzle2()
         {
-            var cups = CupParser.Parse("394618527");
-            var currentCups = cups.GetCurrentCups();
-            var maxCup = currentCups.Max();
+            var cupList = new List<int> {3,9,4,6,1,8,5,2,7};
+            for (var i = cupList.Max() + 1; i <= 1000000; i++) 
+                cupList.Add(i);
 
-            var allCups = new List<long>(currentCups);
-            for (long i = 0, cupNumber = maxCup; i < 1000000 - currentCups.Length; i++, maxCup++)
-            {
-                allCups.Add(cupNumber);
-            }
-
-
-            var crabCups = new CrabCups(allCups);
-
+            var crabCups = new CrabCups2(new LinkedCupCollection(cupList));
             for (var i = 0; i < 10000000; i++)
             {
-                crabCups.PlayRound();
+                crabCups.PlayRound(3);
             }
 
-            var finalPosition = crabCups.GetState();
-            var s = finalPosition.Aggregate(string.Empty, (current, value) => current + $", {value}");
-            _testOutputHelper.WriteLine(s);
+            var finalPosition = crabCups.GetState(1);
+            Assert.Equal(new[] {835237, 677192}, finalPosition[1..3]);
         }
     }
 }
