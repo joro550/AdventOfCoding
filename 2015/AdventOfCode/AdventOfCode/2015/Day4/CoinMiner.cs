@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 
 namespace AdventOfCode._2015.Day4
@@ -8,8 +7,14 @@ namespace AdventOfCode._2015.Day4
     public class CoinMiner
     {
         private readonly int _numberOfZeros;
+        private readonly string _stringToCompare;
 
-        public CoinMiner(int numberOfZeros = 5) => _numberOfZeros = numberOfZeros;
+        public CoinMiner(int numberOfZeros = 5)
+        {
+            _numberOfZeros = numberOfZeros;
+            for (var i = 0; i < numberOfZeros; i++) 
+                _stringToCompare += "0";
+        }
 
         public int GetValidCoinNumber(string key)
         {
@@ -28,14 +33,13 @@ namespace AdventOfCode._2015.Day4
 
         private static string FromByteArray(byte[] data)
         {
-            // var sb = new StringBuilder();
-            // foreach (var t in data) 
-            //     sb.Append(t.ToString("X2"));
-            // return sb.ToString();
-            return BitConverter.ToString(data).Replace("-","");
+            var sb = new StringBuilder();
+            foreach (var t in data) 
+                sb.Append(t.ToString("X2"));
+            return sb.ToString();
         }
 
         private bool IsValidHash(string hash) 
-            => hash.Length >= _numberOfZeros && "00000".Equals(hash[.._numberOfZeros], StringComparison.CurrentCultureIgnoreCase);
+            => hash.Length >= _numberOfZeros && _stringToCompare.Equals(hash[.._numberOfZeros], StringComparison.CurrentCultureIgnoreCase);
     }
 }

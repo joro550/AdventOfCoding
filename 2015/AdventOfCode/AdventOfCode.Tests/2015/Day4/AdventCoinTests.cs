@@ -42,7 +42,7 @@ namespace AdventOfCode.Tests._2015.Day4
 
             var coinMiner = new CoinMiner(6);
             var thing = coinMiner.GetValidCoinNumber(key);
-            Assert.Equal(346386, thing);
+            Assert.Equal(9958218, thing);
         }
     }
 }
