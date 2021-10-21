@@ -5,5 +5,12 @@
     &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day4.AdventCoinTests.Puzzle1&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day4.AdventCoinTests.Puzzle2&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day4.AdventCoinTests.Example1&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.LetterEvalRuleTests.WhenWordMatchesRules_TrueIsReturned&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.LetterDuplicationRuleTests.WhenWordDoesntMatchRules_FalseIsReturned&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.LetterDuplicationRuleTests.WhenWordDoesMatchRules_TrueIsReturned&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.WordExclusionTests.WhenWordDoesntMatchRules_FalseIsReturned&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.WordExclusionTests.WhenWordDoesMatchRules_TrueIsReturned&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.Puzzle1Tests.Example1&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.Puzzle1Tests.Puzzle1&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
