@@ -18,6 +18,24 @@ namespace AdventOfCode._2015.Day5
             => !word.Contains(Word);
     }
     
+    public record RepeatingLetterRule(int JumpNumber = 2) : Rule
+    {
+        public override bool Evaluate(string word)
+        {
+            for (var i = 0; i < word.Length; i++)
+            {
+                var jumpLetter = i + JumpNumber;
+                if (jumpLetter >= word.Length)
+                    return false;
+
+                if (char.Equals(word[i], word[jumpLetter]))
+                    return true;
+            }
+
+            return false;
+        }
+    }
+    
     public record LetterDuplicationRule(int NumberOfLetters, int Times) : Rule
     {
         public override bool Evaluate(string word)

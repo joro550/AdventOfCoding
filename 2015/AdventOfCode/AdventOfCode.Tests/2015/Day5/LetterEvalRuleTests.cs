@@ -65,6 +65,21 @@ namespace AdventOfCode.Tests._2015.Day5
         }
     }
 
+    public class RepeatingLetterRuleTests
+    {
+        [Theory]
+        [InlineData("xyx")]
+        [InlineData("abcdefeghi")]
+        [InlineData("efe")]
+        public void WhenWordDoesMatchRule_TrueIsReturned(string word)
+        {
+            var rule = new RepeatingLetterRule();
+            var isValid = rule.Evaluate(word);
+            Assert.True(isValid);
+        }
+        
+    }
+
     public class Puzzle1Tests
     {
         [Theory]
@@ -108,6 +123,47 @@ namespace AdventOfCode.Tests._2015.Day5
                     new WordExclusion("cd"),
                     new WordExclusion("pq"),
                     new WordExclusion("xy"),
+                }
+            };
+
+            var count = input.Split(Environment.NewLine)
+                .Count(word => evaluator.IsNiceWord(word));
+            Assert.Equal(258, count);
+        }
+        
+        
+        [Theory]
+        [InlineData("qjhvhtzxzqqjkmpb", true)]
+        [InlineData("xxyxx", true)]
+        [InlineData("uurcxstgmygtbstg", false)]
+        [InlineData("dvszwmarrgswjxmb", false)]
+        public void Example2(string word, bool expectedResult)
+        {
+            var evaluator = new WordEvaluator()
+            {
+                Rules =
+                {
+                    new LetterDuplicationRule(2, 1),
+                    new RepeatingLetterRule()
+                }
+            };
+
+            var isNice = evaluator.IsNiceWord(word);
+            Assert.Equal(expectedResult, isNice);
+        }
+
+        [Fact]
+        public void Puzzle2()
+        {
+            var input = FileReader
+                .GetResource("AdventOfCode.Tests._2015.Day5.PuzzleInput.txt");
+
+            var evaluator = new WordEvaluator
+            {
+                Rules =
+                {
+                    new LetterDuplicationRule(2, 1),
+                    new RepeatingLetterRule()
                 }
             };
 
