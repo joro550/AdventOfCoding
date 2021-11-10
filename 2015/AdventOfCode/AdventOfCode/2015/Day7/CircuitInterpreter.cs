@@ -1,67 +1,79 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace AdventOfCode._2015.Day7
 {
-    public class CircuitInterpreter
+    public static class CircuitInterpreter
     {
         public static Program Parse(string script)
         {
-            var tokens = new TokenQueue(Tokenize(script));
             var instructions = new List<Instruction>();
+            var tokens = new TokenQueue(Tokenizer.Tokenize(script));
 
             var token = tokens.GetNext();
-
-            while (token.TokenType != TokenType.EndOfScript)
+            while (token.IsEndOfScript())
             {
-                var instruction = ToInstruction(token, tokens);
-                
                 var nextToken = tokens.GetNext();
-            
-                while (nextToken.TokenType != TokenType.EndOfLine)
+                var instruction = ToInstruction(token, tokens);
+
+                while (nextToken.IsEndOfLine())
                 {
-                    Token rightToken;
-                
-                    switch (nextToken.TokenType)
+                    instruction = nextToken.TokenType switch
                     {
-                        case TokenType.Assign:
-                            rightToken = tokens.GetNext();
-                            instruction = new AssignInstruction(instruction, new SetWireInstruction(rightToken.Value));
-                            break; 
-                        case TokenType.And:
-                            rightToken = tokens.GetNext();
-                            instruction = new AndInstruction(instruction, ToInstruction(rightToken, tokens));
-                            break;
-                        case TokenType.Or:
-                            rightToken = tokens.GetNext();
-                            instruction = new OrInstruction(instruction, ToInstruction(rightToken, tokens));
-                            break;
-                        case TokenType.Not:
-                            rightToken = tokens.GetNext();
-                            instruction = new NotInstruction(ToInstruction(rightToken, tokens));
-                            break;
-                        case TokenType.LShift:
-                            rightToken = tokens.GetNext();
-                            instruction = new LeftShiftInstruction(instruction, ToInstruction(rightToken, tokens));
-                            break;
-                        case TokenType.RShift:
-                            rightToken = tokens.GetNext();
-                            instruction = new RightShiftInstruction(instruction, ToInstruction(rightToken, tokens));
-                            break;
-                    }
-                
+                        TokenType.Assign => AssignInstruction(tokens, instruction),
+                        TokenType.And => AndInstruction(tokens, instruction),
+                        TokenType.Or => OrInstruction(tokens, instruction),
+                        TokenType.Not => NotInstruction(tokens),
+                        TokenType.LShift => LShiftInstruction(tokens, instruction),
+                        TokenType.RShift => RShiftInstruction(tokens, instruction),
+                        _ => instruction
+                    };
+
                     nextToken = tokens.GetNext();
                 }
                 
-
                 instructions.Add(instruction);
                 token = tokens.GetNext();
             }
 
-
             return new Program(instructions);
+        }
+
+        private static Instruction RShiftInstruction(TokenQueue tokens, Instruction instruction)
+        {
+            var rightToken = tokens.GetNext();
+            return new RightShiftInstruction(instruction, ToInstruction(rightToken, tokens));
+        }
+
+        private static Instruction LShiftInstruction(TokenQueue tokens, Instruction instruction)
+        {
+            var rightToken = tokens.GetNext();
+            return new LeftShiftInstruction(instruction, ToInstruction(rightToken, tokens));;
+        }
+
+        private static Instruction NotInstruction(TokenQueue tokens)
+        {
+            var rightToken = tokens.GetNext();
+            return new NotInstruction(ToInstruction(rightToken, tokens));
+        }
+
+        private static Instruction OrInstruction(TokenQueue tokens, Instruction instruction)
+        {
+            var rightToken = tokens.GetNext();
+            return new OrInstruction(instruction, ToInstruction(rightToken, tokens));
+        }
+
+        private static Instruction AndInstruction(TokenQueue tokens, Instruction instruction)
+        {
+            var rightToken = tokens.GetNext();
+            return new AndInstruction(instruction, ToInstruction(rightToken, tokens));
+        }
+
+        private static Instruction AssignInstruction(TokenQueue tokens, Instruction instruction)
+        {
+            var rightToken = tokens.GetNext();
+            return new AssignInstruction(instruction, new SetWireInstruction(rightToken.Value));
         }
 
         private static Instruction ToInstruction(Token token, TokenQueue tokens)
@@ -80,9 +92,11 @@ namespace AdventOfCode._2015.Day7
 
             return func();
         }
-        
+    }
 
-        private static IEnumerable<Token> Tokenize(string script)
+    public static class Tokenizer
+    {
+        public static IEnumerable<Token> Tokenize(string script)
         {
             var tokens = new List<Token>();
             foreach (var line in script.Split(Environment.NewLine))
@@ -95,11 +109,10 @@ namespace AdventOfCode._2015.Day7
             return tokens;
         }
 
-        private static Token ToToken(string word)
-        {
-            return word switch
+        private static Token ToToken(string word) =>
+            word switch
             {
-                "->" => new Token(TokenType.Assign, string.Empty),
+                "->" => Token.Assign(),
                 "AND" => new Token(TokenType.And, string.Empty),
                 "OR" => new Token(TokenType.Or, string.Empty),
                 "LSHIFT" => new Token(TokenType.LShift, string.Empty),
@@ -109,7 +122,6 @@ namespace AdventOfCode._2015.Day7
                     ? new Token(TokenType.Number, value.ToString())
                     : new Token(TokenType.WireName, word)
             };
-        }
     }
 
 
@@ -120,19 +132,11 @@ namespace AdventOfCode._2015.Day7
         public TokenQueue(IEnumerable<Token> tokens) 
             => _tokenQueue = new Queue<Token>(tokens);
 
-        public Token GetNext()
-        {
-            if (_tokenQueue.TryDequeue(out var token))
-                return token;
-            return new Token(TokenType.Unknown, string.Empty);
-        }
+        public Token GetNext() 
+            => _tokenQueue.TryDequeue(out var token) ? token : new Token(TokenType.Unknown, string.Empty);
 
-        public Token PeekNext()
-        {
-            if(_tokenQueue.TryPeek(out var token))
-                return token;
-            return new Token(TokenType.Unknown, string.Empty);
-        }
+        public Token PeekNext() 
+            => _tokenQueue.TryPeek(out var token) ? token : new Token(TokenType.Unknown, string.Empty);
     }
 
     public class Program
@@ -190,7 +194,14 @@ namespace AdventOfCode._2015.Day7
         Not
     }
 
-    public record Token(TokenType TokenType, string Value);
+    public record Token(TokenType TokenType, string Value)
+    {
+        public bool IsEndOfLine() => TokenType == TokenType.EndOfLine;
+        public bool IsEndOfScript() => TokenType == TokenType.EndOfScript;
+
+
+        public static Token Assign() => new(TokenType.Assign, string.Empty);
+    }
 
     public abstract record Instruction
     {
