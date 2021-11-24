@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace AdventOfCode._2015.Day7
@@ -8,32 +7,47 @@ namespace AdventOfCode._2015.Day7
     {
         public static Program Parse(string script)
         {
-            var instructions = new List<Instruction>();
+            var instructions = new Dictionary<string, Instruction>();
             var tokens = new TokenQueue(Tokenizer.Tokenize(script));
 
             var token = tokens.GetNext();
-            while (token.IsEndOfScript())
+            while (!token.IsEndOfScript())
             {
-                var nextToken = tokens.GetNext();
                 var instruction = ToInstruction(token, tokens);
-
-                while (nextToken.IsEndOfLine())
+                
+                token = tokens.GetNext();
+                var wireName = string.Empty;
+                while (!token.IsEndOfLine())
                 {
-                    instruction = nextToken.TokenType switch
+                    switch (token.TokenType)
                     {
-                        TokenType.Assign => AssignInstruction(tokens, instruction),
-                        TokenType.And => AndInstruction(tokens, instruction),
-                        TokenType.Or => OrInstruction(tokens, instruction),
-                        TokenType.Not => NotInstruction(tokens),
-                        TokenType.LShift => LShiftInstruction(tokens, instruction),
-                        TokenType.RShift => RShiftInstruction(tokens, instruction),
-                        _ => instruction
-                    };
+                        case TokenType.Assign:
+                            instruction = AssignInstruction(tokens, instruction);
+                            wireName = tokens.GetCurrent().Value;
 
-                    nextToken = tokens.GetNext();
+                            break;
+                        case TokenType.And:
+                            instruction = AndInstruction(tokens, instruction);
+                            break;
+                        case TokenType.Or:
+                            instruction = OrInstruction(tokens, instruction);
+                            break;
+                        case TokenType.Not:
+                            instruction = NotInstruction(tokens);
+                            break;
+                        case TokenType.LShift:
+                            instruction = LShiftInstruction(tokens, instruction);
+                            break;
+                        case TokenType.RShift:
+                            instruction = RShiftInstruction(tokens, instruction);
+                            break;
+                    }
+
+                    token = tokens.GetNext();
                 }
                 
-                instructions.Add(instruction);
+                instructions.Add(wireName, instruction);
+                
                 token = tokens.GetNext();
             }
 
@@ -73,7 +87,7 @@ namespace AdventOfCode._2015.Day7
         private static Instruction AssignInstruction(TokenQueue tokens, Instruction instruction)
         {
             var rightToken = tokens.GetNext();
-            return new AssignInstruction(instruction, new SetWireInstruction(rightToken.Value));
+            return new AssignInstruction(instruction, new GetWireInstruction(rightToken.Value));
         }
 
         private static Instruction ToInstruction(Token token, TokenQueue tokens)
@@ -94,87 +108,64 @@ namespace AdventOfCode._2015.Day7
         }
     }
 
-    public static class Tokenizer
-    {
-        public static IEnumerable<Token> Tokenize(string script)
-        {
-            var tokens = new List<Token>();
-            foreach (var line in script.Split(Environment.NewLine))
-            {
-                tokens.AddRange(line.Split(" ").Select(ToToken));
-                tokens.Add(new Token(TokenType.EndOfLine, string.Empty));
-            }
-
-            tokens.Add(new Token(TokenType.EndOfScript, string.Empty));
-            return tokens;
-        }
-
-        private static Token ToToken(string word) =>
-            word switch
-            {
-                "->" => Token.Assign(),
-                "AND" => new Token(TokenType.And, string.Empty),
-                "OR" => new Token(TokenType.Or, string.Empty),
-                "LSHIFT" => new Token(TokenType.LShift, string.Empty),
-                "RSHIFT" => new Token(TokenType.RShift, string.Empty),
-                "NOT" => new Token(TokenType.Not, string.Empty),
-                _ => int.TryParse(word, out var value)
-                    ? new Token(TokenType.Number, value.ToString())
-                    : new Token(TokenType.WireName, word)
-            };
-    }
-
-
-    public class TokenQueue
-    {
-        private readonly Queue<Token> _tokenQueue;
-
-        public TokenQueue(IEnumerable<Token> tokens) 
-            => _tokenQueue = new Queue<Token>(tokens);
-
-        public Token GetNext() 
-            => _tokenQueue.TryDequeue(out var token) ? token : new Token(TokenType.Unknown, string.Empty);
-
-        public Token PeekNext() 
-            => _tokenQueue.TryPeek(out var token) ? token : new Token(TokenType.Unknown, string.Empty);
-    }
-
     public class Program
     {
-        private readonly List<Instruction> _instructions;
+        private readonly Dictionary<string, Instruction> _wires = new();
         
-        public Program(List<Instruction> instructions) 
-            => _instructions = instructions;
+        public Program(Dictionary<string, Instruction> wires) 
+            => _wires = wires;
 
-        public ProgramResult Run()
+        public ushort GetWireValue(string wireName)
         {
-            var result = new ProgramResult();
+            var result = new ProgramResult(_wires);
             var visitor = new InstructionVisitor(result);
 
-            foreach (var instruction in _instructions) 
-                instruction.Accept(visitor);
-
-            return result;
+            _wires[wireName].Accept(visitor);
+            
+            return result.GetResult();
         }
     }
 
     public class ProgramResult
     {
-        private readonly Dictionary<string, ushort> _wires = new();
+        private ushort _result;
         private ushort _register;
+        private readonly Dictionary<string, Instruction> _wires;
+        private readonly Dictionary<string, ushort> _wireValues;
 
-        public ushort GetWireValue(string wireName) 
-            => _wires.ContainsKey(wireName) ? _wires[wireName] : (ushort)0;
-
-        public void SetWireValue(string wireName, ushort value)
+        public ProgramResult(Dictionary<string, Instruction> wires, Dictionary<string, ushort> cache = null)
         {
-            if (!_wires.ContainsKey(wireName))
-                _wires.Add(wireName, 0);
-            _wires[wireName] = value;
+            _wires = wires;
+            _wireValues = cache ?? new Dictionary<string, ushort>();
+        }
+
+        public ushort GetWireValue(string wireName)
+        {
+            if (_wireValues.ContainsKey(wireName))
+                return _wireValues[wireName];
+
+            var result = new ProgramResult(_wires, _wireValues);
+            var visitor = new InstructionVisitor(result);
+            _wires[wireName].Accept(visitor);
+            var value = result.GetResult();
+            _wireValues.Add(wireName, value);
+            
+            return value;
         }
 
         public void SetRegister(ushort value) => _register = value;
         public ushort GetRegister() => _register;
+
+        public void SetResult()
+        {
+            _result = _register;
+            _register = default;
+        }
+
+        public ushort GetResult() => _result;
+
+        public Dictionary<string,Instruction> GetWires() 
+            => _wires;
     }
 
     public enum TokenType
@@ -213,21 +204,12 @@ namespace AdventOfCode._2015.Day7
         public override void Accept(Visitor visitor) => visitor.VisitInstruction(this);
     }
 
-    public record ClearInstruction : Instruction
-    {
-        public override void Accept(Visitor visitor) => visitor.VisitInstruction(this);
-    }
     public record NumberInstruction(ushort Number) : Instruction
     {
         public override void Accept(Visitor visitor) => visitor.VisitInstruction(this);
     }
 
     public record GetWireInstruction(string Name) : Instruction
-    {
-        public override void Accept(Visitor visitor) => visitor.VisitInstruction(this);
-    }
-
-    public record SetWireInstruction(string Name) : Instruction
     {
         public override void Accept(Visitor visitor) => visitor.VisitInstruction(this);
     }
@@ -262,20 +244,17 @@ namespace AdventOfCode._2015.Day7
         public override void Accept(Visitor visitor) => visitor.VisitInstruction(this);
     }
 
-
     public abstract class Visitor
     {
         public abstract void VisitInstruction(NullInstruction instruction);
         public abstract void VisitInstruction(NumberInstruction instruction);
         public abstract void VisitInstruction(GetWireInstruction instruction);
-        public abstract void VisitInstruction(SetWireInstruction instruction);
         public abstract void VisitInstruction(AssignInstruction instruction);
         public abstract void VisitInstruction(AndInstruction instruction);
         public abstract void VisitInstruction(OrInstruction instruction);
         public abstract void VisitInstruction(LeftShiftInstruction instruction);
         public abstract void VisitInstruction(NotInstruction instruction);
         public abstract void VisitInstruction(RightShiftInstruction instruction);
-        public abstract void VisitInstruction(ClearInstruction instruction);
     }
 
     public class InstructionVisitor : Visitor
@@ -291,20 +270,16 @@ namespace AdventOfCode._2015.Day7
         public override void VisitInstruction(NumberInstruction instruction)
             => _result.SetRegister(instruction.Number);
 
-        public override void VisitInstruction(GetWireInstruction instruction) 
-            => _result.SetRegister(_result.GetWireValue(instruction.Name));
-
-        public override void VisitInstruction(SetWireInstruction instruction)
+        public override void VisitInstruction(GetWireInstruction instruction)
         {
-            var register = _result.GetRegister();
-            _result.SetWireValue(instruction.Name, register);
+            var wireInstruction = _result.GetWireValue(instruction.Name);
+            _result.SetRegister(wireInstruction);
         }
 
         public override void VisitInstruction(AssignInstruction instruction)
         {
             instruction.Left.Accept(this);
-            instruction.Right.Accept(this);
-            new ClearInstruction().Accept(this); // clear register
+            _result.SetResult();
         }
 
         public override void VisitInstruction(AndInstruction instruction)
@@ -350,8 +325,5 @@ namespace AdventOfCode._2015.Day7
             
             _result.SetRegister((ushort)(register >> _result.GetRegister()));
         }
-
-        public override void VisitInstruction(ClearInstruction instruction) 
-            => _result.SetRegister(0);
     }
 }

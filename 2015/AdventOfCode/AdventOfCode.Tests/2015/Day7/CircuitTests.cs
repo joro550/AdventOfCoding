@@ -10,9 +10,7 @@ namespace AdventOfCode.Tests._2015.Day7
         {
             const string script = "123 -> x";
             var program = CircuitInterpreter.Parse(script);
-            var runResult = program.Run();
-            var value = runResult.GetWireValue("x");
-            Assert.Equal(123, value);
+            Assert.Equal((ushort)123, program.GetWireValue("x"));
         }
         
         [Fact]
@@ -22,9 +20,7 @@ namespace AdventOfCode.Tests._2015.Day7
 456 -> y
 x AND y -> d";
             var program = CircuitInterpreter.Parse(script);
-            var runResult = program.Run();
-            
-            Assert.Equal(72, runResult.GetWireValue("d"));
+            Assert.Equal(72, program.GetWireValue("d"));
         }
         
         [Fact]
@@ -33,9 +29,7 @@ x AND y -> d";
             const string script = @"123 -> x
 NOT x -> h";
             var program = CircuitInterpreter.Parse(script);
-            var runResult = program.Run();
-            
-            Assert.Equal(65412, runResult.GetWireValue("h"));
+            Assert.Equal(65412, program.GetWireValue("h"));
         }
         
         [Fact]
@@ -51,16 +45,15 @@ NOT x -> h
 NOT y -> i";
             
             var program = CircuitInterpreter.Parse(script);
-            var runResult = program.Run();
             
-            Assert.Equal(72, runResult.GetWireValue("d"));
-            Assert.Equal(507, runResult.GetWireValue("e"));
-            Assert.Equal(492, runResult.GetWireValue("f"));
-            Assert.Equal(114, runResult.GetWireValue("g"));
-            Assert.Equal(65412, runResult.GetWireValue("h"));
-            Assert.Equal(65079, runResult.GetWireValue("i"));
-            Assert.Equal(123, runResult.GetWireValue("x"));
-            Assert.Equal(456, runResult.GetWireValue("y"));
+            Assert.Equal(72, program.GetWireValue("d"));
+            Assert.Equal(507, program.GetWireValue("e"));
+            Assert.Equal(492, program.GetWireValue("f"));
+            Assert.Equal(114, program.GetWireValue("g"));
+            Assert.Equal(65412, program.GetWireValue("h"));
+            Assert.Equal(65079, program.GetWireValue("i"));
+            Assert.Equal(123, program.GetWireValue("x"));
+            Assert.Equal(456, program.GetWireValue("y"));
         }
         
         [Fact]
@@ -70,9 +63,7 @@ NOT y -> i";
                 .GetResource("AdventOfCode.Tests._2015.Day7.PuzzleInput.txt");
             
             var program = CircuitInterpreter.Parse(input);
-            var runResult = program.Run();
-            
-            Assert.Equal(0, runResult.GetWireValue("a"));
+            Assert.Equal(0, program.GetWireValue("a"));
         }
     }
 }

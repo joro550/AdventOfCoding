@@ -14,5 +14,8 @@ namespace AdventOfCode.Tests
             using var reader = new StreamReader(stream ?? throw new InvalidOperationException());
             return reader.ReadToEnd();
         }
+        
+        
+        
     }
 }
