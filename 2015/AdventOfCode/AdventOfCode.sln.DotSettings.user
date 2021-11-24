@@ -4,7 +4,13 @@
     &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day7.CircuitTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e455ab7b_002De466_002D4c1b_002Da35f_002De4b8ce3cbe81/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" IsLocked="True" Name="DoThing" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=538adfb5_002D0899_002D4efc_002Db4b0_002D5e954bfdf20a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Puzzle2Test" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day7.CircuitTests.Puzzle2Test&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day7.CircuitTests.Puzzle1Test&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e455ab7b_002De466_002D4c1b_002Da35f_002De4b8ce3cbe81/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsLocked="True" Name="DoThing" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day4.AdventCoinTests.Example2&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day4.AdventCoinTests.Puzzle1&lt;/TestId&gt;&#xD;

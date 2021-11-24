@@ -63,6 +63,16 @@ NOT y -> i";
                 .GetResource("AdventOfCode.Tests._2015.Day7.PuzzleInput.txt");
             
             var program = CircuitInterpreter.Parse(input);
+            Assert.Equal(46065, program.GetWireValue("a"));
+        }
+        
+        [Fact]
+        public void Puzzle2Test()
+        {
+            var input = FileReader
+                .GetResource("AdventOfCode.Tests._2015.Day7.PuzzleInput2.txt");
+            
+            var program = CircuitInterpreter.Parse(input);
             Assert.Equal(0, program.GetWireValue("a"));
         }
     }
