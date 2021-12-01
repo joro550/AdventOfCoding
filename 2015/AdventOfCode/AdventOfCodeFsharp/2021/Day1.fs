@@ -8,30 +8,18 @@ let increaseCalculator (contents: string)=
         |> Seq.pairwise
         |> Seq.filter (fun (x,y) -> y > x)
         |> Seq.length
-    
-type SlidingWindow(value : int) =
-    let Value = value
-    
-    member _.value ()= Value
-        
-    static member fromLines(start:int, endIndex : int, lines : List<int>) : SlidingWindow =
-        let length = lines.Length - 1
-        let endRange =
-            if length >= endIndex then endIndex else length
-        SlidingWindow(List.sum lines[start..endRange])
-           
+            
+let getSlidingSum (lines : seq<int>) : seq<int> =
+    let linesList = lines |> Seq.toList
+    lines |> Seq.mapi (fun i _ -> linesList[i..i+2] |> List.sum)      
            
 let windowIncreaseCalculator (contents: string)=
-    let lines = contents.Split(Environment.NewLine)
-                |> Seq.map (fun x -> x |> Int32.Parse)
-                |> Seq.toList
-                
-    let windows = 
-        lines |> List.mapi (fun i _ -> SlidingWindow.fromLines(i, i+2, lines))
+    contents.Split(Environment.NewLine)
+        |> Seq.map (fun x -> x |> Int32.Parse)
+        |> getSlidingSum
         |> Seq.pairwise
-        |> Seq.filter (fun (x,y) -> y.value() > x.value())
-        |> Seq.toArray
-        
-    windows.Length
+        |> Seq.filter (fun (x,y) -> y > x)
+        |> Seq.length
+
             
    
