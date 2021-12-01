@@ -3,12 +3,11 @@
 open System
 
 let increaseCalculator (contents: string)=
-    let lines = contents.Split(Environment.NewLine)
-                |> Seq.map (fun x -> x |> Int32.Parse)
-                |> Seq.pairwise
-                |> Seq.filter (fun (x,y) -> y > x)
-                |> Seq.toArray
-    lines.Length
+    contents.Split(Environment.NewLine)
+        |> Seq.map (fun x -> x |> Int32.Parse)
+        |> Seq.pairwise
+        |> Seq.filter (fun (x,y) -> y > x)
+        |> Seq.length
     
 type SlidingWindow(value : int) =
     let Value = value
