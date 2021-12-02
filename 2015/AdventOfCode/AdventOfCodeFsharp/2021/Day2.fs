@@ -53,4 +53,5 @@ let executeInstructions (input :string) =
         |> getInstructions
         |> List.map (fun elem -> ship <- ship |> elem.execute)
         |> ignore
+        
     ship
