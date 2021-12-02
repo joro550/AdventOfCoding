@@ -20,6 +20,3 @@ let windowIncreaseCalculator (contents: string)=
         |> Seq.pairwise
         |> Seq.filter (fun (x,y) -> y > x)
         |> Seq.length
-
-            
-   
