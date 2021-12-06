@@ -44,9 +44,7 @@ let getLeastPopularNumber (input:string[])=
 let getOxygenRating (input:string)=
     let mutable i =0
     let mutable values = input.Split(Environment.NewLine)
-
-    
-    
+        
     while values.Length > 1 do
         let mostPopular = getMostPopularNumber(values)
         values <- values |> Array.filter (fun elem -> elem[i].ToString() = mostPopular[i])
