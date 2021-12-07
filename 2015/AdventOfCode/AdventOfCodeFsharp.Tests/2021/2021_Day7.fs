@@ -28,7 +28,7 @@ let ``Get Fuel 2 Given position 5 then fuel expended is 168`` ()=
     let input = "16,1,2,0,4,2,7,1,2,14"
     let fuelCost = getSubmarines(input)
                         |> (fun elem -> getFuelCost2(elem, 5))
-    Assert.Equal(168, fuelCost)
+    Assert.Equal(168L, fuelCost)
     
 [<Fact>]
 let ``Example 1`` ()=
@@ -41,7 +41,7 @@ let ``Example 1`` ()=
 let ``Example 2`` ()=
     let input = "16,1,2,0,4,2,7,1,2,14"
     let leastAmountOfFuel = getLeastAmountOfFuel2(input)
-    Assert.Equal(168, leastAmountOfFuel)
+    Assert.Equal(168L, leastAmountOfFuel)
     
 [<Fact>]
 let ``Puzzle 1`` ()=
@@ -56,6 +56,6 @@ let ``Puzzle 2`` ()=
     async {
         let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day7.txt") |> Async.AwaitTask
         let leastAmountOfFuel = getLeastAmountOfFuel2(fileContent)
-        Assert.Equal(96592275, leastAmountOfFuel)
+        Assert.Equal(96592275L, leastAmountOfFuel)
     }
     
