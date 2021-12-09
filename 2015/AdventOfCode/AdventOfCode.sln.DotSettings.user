@@ -4,7 +4,7 @@
     &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day7.CircuitTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=04118871_002D7b4c_002D4385_002Da0c4_002Dea49fd0f1cbb/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=04118871_002D7b4c_002D4385_002Da0c4_002Dea49fd0f1cbb/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::F12DCBE0-DD09-459F-B9E8-823189795FBE::net6.0::Tests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::F12DCBE0-DD09-459F-B9E8-823189795FBE::net6.0::AdventOfCodeFsharp.Tests._2021_Day2.When forward instruction is given then ForwardInstruction is returned&lt;/TestId&gt;&#xD;
@@ -21,6 +21,12 @@
     &lt;TestId&gt;xUnit::F12DCBE0-DD09-459F-B9E8-823189795FBE::net6.0::AdventOfCodeFsharp.Tests._2021._2021_Day8.Thing&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::F12DCBE0-DD09-459F-B9E8-823189795FBE::net6.0::AdventOfCodeFsharp.Tests._2021._2021_Day8.example2&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::F12DCBE0-DD09-459F-B9E8-823189795FBE::net6.0::AdventOfCodeFsharp.Tests._2021._2021_Day8.Puzzle2&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::F12DCBE0-DD09-459F-B9E8-823189795FBE::net6.0::AdventOfCodeFsharp.Tests._2021._2021_Day9.Given grid then neighbours can be retrieved&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4841dbdd_002D4d83_002D46c1_002Da7ca_002Dd6be5d5de950/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Given grid then neighbours can be retrieved" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::F12DCBE0-DD09-459F-B9E8-823189795FBE::net6.0::AdventOfCodeFsharp.Tests._2021._2021_Day9.Given grid then neighbours can be retrieved&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=538350fe_002D7c71_002D433a_002D852a_002Dcb390eba24fc/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="My test" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
@@ -37,6 +43,11 @@
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5b13c354_002De3ad_002D44ca_002D9131_002Deab395938629/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="My test #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8e8951bb_002D0228_002D4dc7_002Db704_002D9825a3c18327/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Given grid then neighbours can be retrieved #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::F12DCBE0-DD09-459F-B9E8-823189795FBE::net6.0::AdventOfCodeFsharp.Tests._2021._2021_Day9&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=91e41590_002Da020_002D4319_002D8c91_002D69eb02b4cc04/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="TestLength" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;

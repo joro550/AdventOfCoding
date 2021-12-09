@@ -40,6 +40,6 @@ let ``Puzzle2`` ()=
     async {
         let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day8.txt") |> Async.AwaitTask
         let count = countFromInput2(fileContent)
-        Assert.Equal(1097819L, count)
+        Assert.Equal(1007675L, count)
     }
     
