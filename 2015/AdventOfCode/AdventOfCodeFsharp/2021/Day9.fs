@@ -1,6 +1,7 @@
 ﻿module AdventOfCodeFsharp._2021.Day9
 
 open System
+open System.Collections.Generic
 
 type Thing(value:int, x:int, y:int) =
     member _.value ()= value
@@ -8,7 +9,12 @@ type Thing(value:int, x:int, y:int) =
     member _.y ()= y
     member _.risk () = value + 1
     
+type Postion(x,y) =
+    member _.x ()=x
+    member _.y ()=y
+    
 type Map(things: Thing[][])=
+    let mutable _cache = new Dictionary<Postion, Thing[]>()
     
     member _.getYLength ()= things.Length - 1
     member _.getXLength ()= things[0].Length - 1
@@ -32,19 +38,26 @@ type Map(things: Thing[][])=
         else [| up; right; down; left |]
         
     member this.getLowestPoint(x:int, y:int) : Thing[]=
+        if _cache.ContainsKey(Postion(x, y)) then _cache[Postion(x, y)]
+        else
+            
         let currentTile = things[y][x]
-        
         let neighbours = this.getNeighbourArray(x,y)
                             |> Array.map (fun (a,b) -> things[b][a])        
                             |> Array.filter (fun elem -> elem.value() < currentTile.value())
                             
-        if neighbours.Length = 0 then [| currentTile |]
+        if neighbours.Length = 0 then
+            _cache.Add((Postion(x, y)), [| currentTile |])
+            [| currentTile |]
 //        else if neighbours.Length = 1 then neighbours
         else
-            neighbours
-                |> Array.map (fun elem -> this.getLowestPoint(elem.x(), elem.y()))
-                |> Array.reduce (fun acc elem -> elem |> Array.append acc)
-                |> Array.distinct
+            let thing = neighbours
+                        |> Array.map (fun elem -> this.getLowestPoint(elem.x(), elem.y()))
+                        |> Array.reduce (fun acc elem -> elem |> Array.append acc)
+                        |> Array.distinct
+                        
+            _cache.Add((Postion(x, y)), thing)
+            thing
                 
     member this.getLowestPoints() : Thing[]=
         things
