@@ -7,7 +7,7 @@ open Xunit
 [<Fact>]
 let ``Puzzle 1`` () =
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day1.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day1.txt")
         let result = increaseCalculator(fileContent)
         Assert.Equal(1288, result)
     }
@@ -15,7 +15,7 @@ let ``Puzzle 1`` () =
 [<Fact>]
 let ``Puzzle 2`` () =
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day1.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day1.txt")
         let result = windowIncreaseCalculator(fileContent)
         Assert.Equal(1311, result)
     }

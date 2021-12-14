@@ -46,7 +46,7 @@ let ``Example 2`` ()=
 [<Fact>]
 let ``Puzzle 1`` ()=
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day7.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day7.txt")
         let leastAmountOfFuel = getLeastAmountOfFuel(fileContent)
         Assert.Equal(340056, leastAmountOfFuel)
     }
@@ -54,7 +54,7 @@ let ``Puzzle 1`` ()=
 [<Fact>]
 let ``Puzzle 2`` ()=
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day7.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day7.txt")
         let leastAmountOfFuel = getLeastAmountOfFuel2(fileContent)
         Assert.Equal(96592275L, leastAmountOfFuel)
     }

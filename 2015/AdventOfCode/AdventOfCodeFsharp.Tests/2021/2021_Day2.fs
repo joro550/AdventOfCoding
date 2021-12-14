@@ -7,7 +7,7 @@ open Xunit
 [<Fact>]
 let ``Puzzle1`` () =
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day2.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day2.txt")
         let ship = executeInstructions(fileContent)
         Assert.Equal(1936494, ship.horizontal() * ship.depth())
     }

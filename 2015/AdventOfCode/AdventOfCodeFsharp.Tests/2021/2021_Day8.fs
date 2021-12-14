@@ -30,7 +30,7 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 [<Fact>]
 let ``Puzzle1`` ()=
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day8.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day8.txt")
         let count = countFromInput(fileContent)
         Assert.Equal(272, count)
     }
@@ -38,7 +38,7 @@ let ``Puzzle1`` ()=
 [<Fact>]
 let ``Puzzle2`` ()=
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day8.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day8.txt")
         let count = countFromInput2(fileContent)
         Assert.Equal(1007675L, count)
     }

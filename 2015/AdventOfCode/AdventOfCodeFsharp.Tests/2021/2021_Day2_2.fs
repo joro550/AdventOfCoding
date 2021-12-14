@@ -7,7 +7,7 @@ open AdventOfCodeFsharp.library
 [<Fact>]
 let ``Puzzle1`` () =
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day2.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day2.txt")
         let ship = executeInstructions(fileContent)
         Assert.Equal(1997106066, ship.horizontal() * ship.depth())
     }

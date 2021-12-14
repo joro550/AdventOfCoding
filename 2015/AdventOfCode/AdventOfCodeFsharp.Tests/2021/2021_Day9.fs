@@ -22,7 +22,7 @@ let ``Given grid then neighbours can be retrieved`` ()=
 [<Fact>]
 let ``Puzzle1``()=
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day9.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day9.txt")
         
         let result = parseSteamTubes(fileContent)
         let lowestPoints = result.getLowestPoints()

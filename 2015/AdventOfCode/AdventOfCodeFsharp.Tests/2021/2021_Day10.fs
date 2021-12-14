@@ -37,7 +37,7 @@ let ``Example1`` ()=
 [<Fact>]
 let ``Puzzle1`` ()=
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day10.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day10.txt")
         let count = handleLines(fileContent)
         Assert.Equal(369105L, count)
     }
@@ -46,7 +46,7 @@ let ``Puzzle1`` ()=
 [<Fact>]
 let ``Puzzle2`` ()=
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day10.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day10.txt")
         let count = handleLinesPuzzle2(fileContent)
         Assert.Equal(3999363569L, count)
     }

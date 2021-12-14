@@ -18,6 +18,8 @@
         <Compile Include="2021\2021_Day8.fs" />
         <Compile Include="2021\2021_Day9.fs" />
         <Compile Include="2021\2021_Day10.fs" />
+        <Compile Include="2021\2021_Day13.fs" />
+        <Compile Include="2021\2021_Day14.fs" />
         
         <Compile Include="Program.fs" />
     </ItemGroup>

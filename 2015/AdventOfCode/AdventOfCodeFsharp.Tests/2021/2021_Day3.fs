@@ -8,7 +8,7 @@ open AdventOfCodeFsharp.library
 [<Fact>]
 let ``Puzzle1`` () =
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day3.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day3.txt")
         let gamma = getGammaValue(fileContent)
         let epsilon = getEpsilonRate(fileContent)
         
@@ -18,7 +18,7 @@ let ``Puzzle1`` () =
 [<Fact>]
 let ``Puzzle2`` () =
     async {
-        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day3.txt") |> Async.AwaitTask
+        let! fileContent = loadFileAsync("AdventOfCodeFsharp._2021.Day3.txt")
         let oxygen = getOxygenRating(fileContent)
         let co2 = getco2Rating(fileContent)
         
