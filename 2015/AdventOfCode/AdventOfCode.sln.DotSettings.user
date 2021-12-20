@@ -7,5 +7,8 @@
     &lt;TestId&gt;xUnit::63C4C5E0-E263-4250-8A6F-5A5120EF2F31::net6.0::AdventOfCodeFsharp.Tests._2021._2021_Day14.Given formula then correct array is returned&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::63C4C5E0-E263-4250-8A6F-5A5120EF2F31::net6.0::AdventOfCodeFsharp.Tests._2021._2021_Day14.Example 1&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::63C4C5E0-E263-4250-8A6F-5A5120EF2F31::net6.0::AdventOfCodeFsharp.Tests._2021._2021_Day14&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.Puzzle1Tests.Example2&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.Puzzle1Tests.thing&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::907A79BF-4C0B-4180-9EAB-401468A4CEF4::net5.0::AdventOfCode.Tests._2015.Day5.Puzzle1Tests.Puzzle2&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

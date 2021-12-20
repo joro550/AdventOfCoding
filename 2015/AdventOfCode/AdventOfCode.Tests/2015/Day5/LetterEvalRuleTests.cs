@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AdventOfCode._2015.Day5;
 using Xunit;
@@ -162,14 +163,22 @@ namespace AdventOfCode.Tests._2015.Day5
             {
                 Rules =
                 {
-                    new LetterDuplicationRule(2, 1),
+                    new RepeatingPairRule(),
                     new RepeatingLetterRule()
                 }
             };
 
             var count = input.Split(Environment.NewLine)
                 .Count(word => evaluator.IsNiceWord(word));
-            Assert.Equal(258, count);
+            Assert.Equal(53, count);
+        }
+
+        [Theory]
+        [InlineData("qjhvhtzxzqqjkmpb", true)]
+        public void thing(string input, bool expected)
+        {
+            var rule = new RepeatingPairRule();
+            var thing = rule.Evaluate(input);
         }
     }
 }

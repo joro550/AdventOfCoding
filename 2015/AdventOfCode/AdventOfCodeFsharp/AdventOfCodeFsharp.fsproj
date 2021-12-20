@@ -31,6 +31,7 @@
         <EmbeddedResource Include="2021\Day13.txt" />
         <Compile Include="2021\Day14.fs" />
         <EmbeddedResource Include="2021\Day14.txt" />
+        <Compile Include="2021\Day15.fs" />
     </ItemGroup>
 
 </Project>

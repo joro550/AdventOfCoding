@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode._2015.Day5
 {
@@ -58,6 +60,35 @@ namespace AdventOfCode._2015.Day5
                 lastLetter = letter;
                 currentCount = 0;
             }
+            return false;
+        }
+    }
+    
+    public record RepeatingPairRule() : Rule
+    {
+        public override bool Evaluate(string word)
+        {
+            var result = word.Zip(word.Skip(1), (first, second) => new { pair = $"{first}{second}" })
+                .Select(s => new { sValue = s, matches = Regex.Matches(word, s.pair) })
+                .Distinct()
+                .Where(c => c.matches.Count > 1)
+                .GroupBy(c => c.sValue);
+
+            foreach (var r in result)
+            {
+                var matches = Regex.Matches(word, r.Key.pair).Select(m => m.Index).ToList();
+                
+                for (var i = 0; i < matches.Count; i++)
+                {
+                    for (var j = i+1; j < matches.Count; j++)
+                    {
+                        var difference = matches[j] - matches[i];
+                        if (difference > 1)
+                            return true;
+                    }
+                }
+            }
+
             return false;
         }
     }
