@@ -9,7 +9,7 @@ namespace AdventOfCode.Tests._2022.Day1
         [Fact]
         public void GivenAListOfCalories()
         {
-            var calories = @"1000
+            const string calories = @"1000
 2000
 3000
 
@@ -24,8 +24,7 @@ namespace AdventOfCode.Tests._2022.Day1
 
 10000";
             var elfList =
-                AdventOfCode._2022.Day1.CaloriesCounter.Count(
-                    calories.Split(Environment.NewLine + Environment.NewLine));
+                AdventOfCode._2022.Day1.CaloriesCounter.Count(calories.SplitByDoubleNewLine());
             Assert.Equal(24000, elfList.Max());
         }
 
