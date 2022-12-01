@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
 
         <IsPackable>false</IsPackable>
     </PropertyGroup>
@@ -36,6 +36,8 @@
       <EmbeddedResource Include="2015\Day3\PuzzleInput.txt" />
       <None Remove="2015\Day6\PuzzleInput.txt" />
       <EmbeddedResource Include="2015\Day6\PuzzleInput.txt" />
+      <None Remove="2022\Day1\PuzzleInput.txt" />
+      <EmbeddedResource Include="2022\Day1\PuzzleInput.txt" />
     </ItemGroup>
 
 </Project>
