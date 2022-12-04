@@ -19,6 +19,16 @@ public static class StringExtensions
     {
         return value.Split(" ");
     }
+    
+    public static string[] SplitByComma(this string value)
+    {
+        return value.Split(",");
+    }
+    
+    public static string[] SplitByDash(this string value)
+    {
+        return value.Split("-");
+    }
 
 
     public static string ToString(this string[] values)
