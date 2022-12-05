@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode.Tests;
 
 public static class StringExtensions
 {
-    public static IEnumerable<string> SplitByDoubleNewLine(this string value)
+    public static List<string> SplitByDoubleNewLine(this string value)
     {
-        return value.Split(Environment.NewLine + Environment.NewLine);
+        return value.Split(Environment.NewLine + Environment.NewLine).ToList();
     }
     
     public static string[] SplitByNewLine(this string value)
