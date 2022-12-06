@@ -36,16 +36,13 @@ public class Day6Tests
 
     private static int CountCharactersUntilMarker(string input, int size = 4)
     {
-        for (int i = 0; i < input.Length; i++)
+        for (var i = size; i < input.Length; i++)
         {
-            if(i < size)
-                continue;
-
-            var start = i - size;
-            var possibleMarker = input[start..i];
+            var isMarker = input[(i - size)..i]
+                .Distinct()
+                .Count() == size;
             
-            var distinctLength = possibleMarker.Distinct().Count();
-            if (distinctLength == size)
+            if (isMarker)
                 return i;
         }
 
