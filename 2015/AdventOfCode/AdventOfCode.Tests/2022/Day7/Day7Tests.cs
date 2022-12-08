@@ -93,18 +93,17 @@ $ ls
     [Fact]
     public void Puzzle2()
     {
-        string history = FileReader.GetResource("2022", "7");
+        var history = FileReader.GetResource("2022", "7");
         var fileSystem = Lexer.DoThing(history);
         var size = DirectorySizeCounter.CountSize(fileSystem);
         
         const long totalDiskSize = 70000000;
         var spaceTaken = DirectorySizeCounter.CalculateSpaceTake(fileSystem);
         var spaceLeft = totalDiskSize - spaceTaken;
-        long thing = 30000000 - spaceLeft;
-
+        var spaceNeeded = 30000000 - spaceLeft;
         
         var sum = size.Values
-            .Where(x => x >= thing);
+            .Where(x => x >= spaceNeeded);
 
         var minimumSize = sum.Min();
         Assert.Equal(3636703, minimumSize);
