@@ -15,8 +15,10 @@ public class Grid
     public static Grid New(int amountOfRope = 1)
     {
         var rope = new Rope(new Cell(0,0, true));
+
+        var next = rope;
         for (var i = 0; i < amountOfRope; i++) 
-            rope.SetNext();
+            next = next.SetNext();
 
         return new()
         {
@@ -87,7 +89,11 @@ public class Rope
         return xDiff <= distance && yDiff <= distance;
     }
 
-    public void SetNext() => _next = new Rope(new Cell(0, 0));
+    public Rope SetNext()
+    {
+        _next = new Rope(new Cell(0, 0));
+        return _next;
+    }
 
     public Cell GetCell() => _head;
 

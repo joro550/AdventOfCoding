@@ -58,7 +58,7 @@ R 2";
     {
         var instructionString = FileReader.GetResource("2022", "9");
 
-        var grid = Grid.New();
+        var grid = Grid.New(9);
         var instructions = Instruction.Parse(instructionString);
 
         foreach (var instruction in instructions)
@@ -67,6 +67,6 @@ R 2";
         }
 
         var visited = grid.GetVisitedCells();
-        Assert.Equal(27, visited.Count);
+        Assert.Equal(2445, visited.Count);
     }
 }
