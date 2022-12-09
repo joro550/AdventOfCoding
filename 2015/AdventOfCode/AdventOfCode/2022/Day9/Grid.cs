@@ -8,8 +8,6 @@ namespace AdventOfCode._2022.Day9;
 public class Grid
 {
     private Dictionary<(int, int), Cell> _cellDictionary = new();
-
-
     private Rope _rope;
 
     public static Grid New(int amountOfRope = 1)
@@ -64,15 +62,13 @@ public class Rope
         
         if (_next == null)
             return this;
-
+        
         if (IsTailAdjacent())
             return GetTail();
 
-        var nextHead = _next._head;
-        
-        var newX = nextHead.X == _head.X ? nextHead.X : nextHead.X < _head.X ? nextHead.X + 1 : nextHead.X - 1;
-        var nexY = nextHead.Y == _head.Y ? nextHead.Y : nextHead.Y < _head.Y ? nextHead.Y + 1 : nextHead.Y - 1;
-        return _next.Move(newX, nexY);
+        var xSign = Math.Sign(_head.X - _next._head.X);
+        var ySign = Math.Sign(_head.Y - _next._head.Y);
+        return _next.Move(_next._head.X + xSign, _next._head.Y + ySign);
     }
 
     private Rope GetTail() 
@@ -80,11 +76,8 @@ public class Rope
 
     private bool IsTailAdjacent(int distance =  1)
     {
-        var tailCoords = _next!._head;
-        var headCoords = _head;
-
-        var xDiff = Math.Abs(headCoords.X - tailCoords.X);
-        var yDiff = Math.Abs(headCoords.Y - tailCoords.Y);
+        var xDiff = Math.Abs(_head.X - _next!._head.X);
+        var yDiff = Math.Abs(_head.Y - _next!._head.Y);
 
         return xDiff <= distance && yDiff <= distance;
     }

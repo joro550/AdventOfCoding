@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using AdventOfCode._2022.Day9;
 using Xunit.Abstractions;
 
