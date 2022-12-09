@@ -35,6 +35,7 @@
       <EmbeddedResource Include="2022\Day6\PuzzleInput.txt" />
       <EmbeddedResource Include="2022\Day7\PuzzleInput.txt" />
       <EmbeddedResource Include="2022\Day8\PuzzleInput.txt" />
+      <EmbeddedResource Include="2022\Day9\PuzzleInput.txt" />
       <None Remove="2015\Day1\PuzzleInput.txt" />
       <EmbeddedResource Include="2015\Day1\PuzzleInput.txt" />
       <None Remove="2015\Day2\PuzzleInput.txt" />
