@@ -32,46 +32,59 @@ file abstract record PathFinder
 {
     public static GridPosition Pathfind(Grid grid)
     {
-        var end = grid.GetEnd();
-        var currentNode = grid.GetStart();
-        var unexploredNodes = grid.GetGrid()
-            .ToList();
+        var nodes = grid.GetGrid().ToList();
 
-        while (unexploredNodes.Any())
+        var start = nodes.First(x => x.IsStart);
+        var end = nodes.First(x => x.IsEnd);
+        start.fCost = 0;
+        start.gCost = 0;
+        start.hCost = 0;
+
+        var openList = new List<GridPosition> { start };
+        var closedList = new List<GridPosition>();
+
+        while (openList.Any())
         {
-            currentNode = unexploredNodes.OrderBy(x => x.Distance).First();
-            unexploredNodes.Remove(currentNode);
+            var current = openList.OrderBy(x => x.fCost).First();
+            openList.Remove(current);
+            closedList.Add(current);
             
-            if (currentNode == end)
+            if (current == end)
                 return end;
-            
-            var neighbours = currentNode.GetNeighbours(grid);
-            
-            foreach (var neighbour in neighbours.Where(n => n != null))
+
+            foreach (var neighbour in current.GetNeighbours(grid).Where(x => x != null))
             {
-                var maximumElevationChange = currentNode.Value + 1;
-                var minimumElevationChange = currentNode.Value - 1;
+                if(closedList.Contains(neighbour))
+                    continue;
                 
-                if ( neighbour.Value > maximumElevationChange ||
-                     neighbour.Value < minimumElevationChange)
+                var maximumElevationIncrease = current.Value + 1;
+                var minimumElevationIncrease = current.Value - 1;
+                
+                if(neighbour.Value > maximumElevationIncrease ||
+                   neighbour.Value < minimumElevationIncrease)
                     continue;
 
-                if (unexploredNodes.All(x => x != neighbour))
+                var gNew = current.gCost + 1;
+                var hNew = CalculateH(current.X + neighbour.X, current.Y + neighbour.Y, end);
+                var fNew = gNew + hNew;
+                
+                if(fNew > neighbour.fCost)
                     continue;
 
-                var currentNodeDistance = currentNode.Distance + neighbour.Value;
-                var newDistance = currentNodeDistance < neighbour.Distance;
-
-                if (!newDistance)
-                    continue;
-
-                neighbour.Distance = currentNodeDistance;
-                neighbour.Parent = currentNode;
+                neighbour.gCost = gNew;
+                neighbour.fCost = fNew;
+                neighbour.hCost = hNew;
+                neighbour.Parent = current;
+                
+                if(!openList.Contains(neighbour))
+                    openList.Add(neighbour);
             }
         }
 
-        return currentNode;
+        return end;
     }
+    static double CalculateH(int x, int y, GridPosition dest) 
+        => Math.Sqrt((x - dest.X) * (x - dest.X) + (y - dest.Y) * (y - dest.Y));
 
     public static int FindShortestPath(GridPosition position)
     {
@@ -84,18 +97,10 @@ file abstract record PathFinder
 
 file record GridPosition(int X, int Y, int Value = 0, bool IsStart = false, bool IsEnd = false)
 {
-    public GridPosition(int distance, int x, int y, int value = 0, bool isStart = false, bool isEnd = false)
-    : this(x,y, value, isStart, isEnd)
-    {
-        Distance = distance;
-        X = x;
-        Y = y;
-        Value = value;
-        IsStart = isStart;
-        IsEnd = isEnd;
-    }
+    public int gCost { get; set; } = int.MaxValue;
+    public double hCost { get; set; } = double.MaxValue;
+    public double fCost { get; set; } = double.MaxValue;
 
-    public int Distance { get; set; } = int.MaxValue;
     public GridPosition? Parent { get; set; }
     
     public IEnumerable<GridPosition> GetNeighbours(Grid grid)
@@ -131,7 +136,7 @@ file record Grid
                 var elevation = Elevation.GetElevation(value);
                 var isStart = value == "S";
                 var isEnd = value == "E";
-                grid[y, x] = new GridPosition(isStart ? 0 : int.MaxValue, x, y, elevation, isStart, isEnd);
+                grid[y, x] = new GridPosition(x, y, elevation, isStart, isEnd);
             }
         }
         
