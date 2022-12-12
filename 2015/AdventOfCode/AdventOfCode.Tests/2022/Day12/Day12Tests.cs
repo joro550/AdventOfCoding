@@ -2,6 +2,7 @@
 using Xunit;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Xunit.Abstractions;
 
 namespace AdventOfCode.Tests._2022.Day12;
@@ -16,90 +17,141 @@ public class Day12Tests
     }
 
     [Fact]
-    public void Thing()
+    public void Example1()
     {
         var input = FileReader.GetExample("2022", "12");
         var grid = Grid.Parse(input);
 
-        _testOutputHelper.WriteLine(grid.Visualize());
         var gridPosition = PathFinder.Pathfind(grid);
-        var count = PathFinder.FindShortestPath(gridPosition);
-        Assert.Equal(31, count);
+        var list = PathFinder.FindShortestPath(gridPosition);
+        Assert.Equal(31, list - 2);
+    }
+
+    [Fact]
+    public void Puzzle1()
+    {
+        var input = FileReader.GetResource("2022", "12");
+        var grid = Grid.Parse(input);
+
+        var gridPosition = PathFinder.Pathfind(grid);
+        var list = PathFinder.FindShortestPath(gridPosition);
+        Assert.Equal(462, list - 2);
+    }
+
+    [Fact]
+    public void Puzzle2()
+    {
+        var input = FileReader.GetResource("2022", "12");
+        var grid = Grid.Parse(input);
+
+        var startingPositions = grid.GetGrid().Where(x => x.Value == 1);
+        var shortestPath = int.MaxValue;
+
+        foreach (var startingPosition in startingPositions)
+        {
+            var gridPosition = PathFinder.Pathfind(grid, startingPosition);
+            var list = PathFinder.FindShortestPath(gridPosition)- 2;
+            if (list < shortestPath)
+            {
+                shortestPath = list;
+            }
+
+        }
+        
+        Assert.Equal(31, shortestPath);
     }
 }
 
 file abstract record PathFinder
 {
-    public static GridPosition Pathfind(Grid grid)
+    public static GridPosition Pathfind(Grid grid, GridPosition? start = null)
     {
         var nodes = grid.GetGrid().ToList();
 
-        var start = nodes.First(x => x.IsStart);
+        foreach (var node in nodes)
+        {
+            node.gCost = int.MaxValue;
+            node.hCost = int.MaxValue;
+        }
+
+        start ??= nodes.First(x => x.IsStart);
         var end = nodes.First(x => x.IsEnd);
-        start.fCost = 0;
+        
         start.gCost = 0;
-        start.hCost = 0;
+        start.hCost = CalculateDistance(start, end);
 
         var openList = new List<GridPosition> { start };
-        var closedList = new List<GridPosition>();
+        var closedList = new HashSet<Coords>();
 
         while (openList.Any())
         {
             var current = openList.OrderBy(x => x.fCost).First();
+
+            closedList.Add(current.GetCoords());
             openList.Remove(current);
-            closedList.Add(current);
-            
+
             if (current == end)
                 return end;
+            
+            var maximumElevationIncrease = current.Value + 1;
 
-            foreach (var neighbour in current.GetNeighbours(grid).Where(x => x != null))
+            foreach (var neighbour in current.GetNeighbours(grid)
+                         .Where(x => x != null))
             {
-                if(closedList.Contains(neighbour))
+                if(neighbour.Value > maximumElevationIncrease)
                     continue;
                 
-                var maximumElevationIncrease = current.Value + 1;
-                var minimumElevationIncrease = current.Value - 1;
-                
-                if(neighbour.Value > maximumElevationIncrease ||
-                   neighbour.Value < minimumElevationIncrease)
+                if(closedList.Contains(neighbour.GetCoords()))
                     continue;
-
-                var gNew = current.gCost + 1;
-                var hNew = CalculateH(current.X + neighbour.X, current.Y + neighbour.Y, end);
-                var fNew = gNew + hNew;
                 
-                if(fNew > neighbour.fCost)
+                var tentativeGCost = current.gCost + CalculateDistance(current, neighbour);
+                if (tentativeGCost > neighbour.gCost)
                     continue;
 
-                neighbour.gCost = gNew;
-                neighbour.fCost = fNew;
-                neighbour.hCost = hNew;
                 neighbour.Parent = current;
-                
+                neighbour.gCost = tentativeGCost;
+                neighbour.hCost = CalculateDistance(neighbour, end);
+
                 if(!openList.Contains(neighbour))
                     openList.Add(neighbour);
             }
         }
 
-        return end;
+        return null;
     }
-    static double CalculateH(int x, int y, GridPosition dest) 
-        => Math.Sqrt((x - dest.X) * (x - dest.X) + (y - dest.Y) * (y - dest.Y));
+
+    private static int CalculateDistance(GridPosition current, GridPosition dest)
+    {
+        var xDistance = Math.Abs(current.X - dest.X);
+        var yDistance = Math.Abs(current.Y - dest.Y);
+        var remaining = Math.Abs(xDistance - yDistance);
+        return 14 * Math.Min(xDistance, yDistance) + 10 * remaining;
+    }
 
     public static int FindShortestPath(GridPosition position)
     {
-        const int i = 1;
-        if (position.Parent == null)
-            return 1;
-        return i + FindShortestPath(position.Parent);
+        var count = 1;
+
+        var currentNode = position;
+        while (currentNode != null)
+        {
+            currentNode = currentNode.Parent;
+            count += 1;
+        }
+
+        return count;
     }
 }
+
+file record Coords(int X, int Y);
 
 file record GridPosition(int X, int Y, int Value = 0, bool IsStart = false, bool IsEnd = false)
 {
     public int gCost { get; set; } = int.MaxValue;
-    public double hCost { get; set; } = double.MaxValue;
-    public double fCost { get; set; } = double.MaxValue;
+    public int hCost { get; set; } = int.MaxValue;
+    public int fCost => gCost + hCost;
+
+    public Coords ToCoords() => new(X, Y);
 
     public GridPosition? Parent { get; set; }
     
@@ -113,6 +165,8 @@ file record GridPosition(int X, int Y, int Value = 0, bool IsStart = false, bool
             grid.GetPosition(X, Y + 1)
         };
     }
+
+    public Coords GetCoords() => new(X, Y);
 }
 
 file record Grid
@@ -136,7 +190,7 @@ file record Grid
                 var elevation = Elevation.GetElevation(value);
                 var isStart = value == "S";
                 var isEnd = value == "E";
-                grid[y, x] = new GridPosition(x, y, elevation, isStart, isEnd);
+                grid[y, x] = new GridPosition(x, y, isEnd ? 26 : elevation, isStart, isEnd);
             }
         }
         
@@ -149,38 +203,6 @@ file record Grid
             y < 0 || y >= _grid.GetLength(0))
             return null;
         return _grid[y, x];
-    }
-
-    public GridPosition GetStart()
-    {
-        for (int i = 0; i < _grid.GetLength(0); i++)
-        {
-            for (int j = 0; j < _grid.GetLength(1); j++)
-            {
-                if (_grid[i, j].IsStart)
-                {
-                    return _grid[i, j];
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public GridPosition GetEnd()
-    {
-        for (int i = 0; i < _grid.GetLength(0); i++)
-        {
-            for (int j = 0; j < _grid.GetLength(1); j++)
-            {
-                if (_grid[i, j].IsEnd)
-                {
-                    return _grid[i, j];
-                }
-            }
-        }
-
-        return null;
     }
 
     public IEnumerable<GridPosition> GetGrid()
@@ -204,7 +226,56 @@ file record Grid
         {
             for (var j = 0; j < _grid.GetLength(1); j++)
             {
-                list += _grid[i, j].Value;
+                list += _grid[i, j].Value + " ";
+            }
+
+            list += Environment.NewLine;
+        }
+
+        return list;
+    }
+    
+    
+    
+    public string Visualize(List<GridPosition> path)
+    {
+        var list = "";
+        for (var i = 0; i < _grid.GetLength(0); i++)
+        {
+            for (var j = 0; j < _grid.GetLength(1); j++)
+            {
+                if (path.Contains(_grid[i, j]))
+                {
+                    if (_grid[i, j].Parent == null)
+                    {
+                        
+                        list += "S ";
+                    }
+                    else if (_grid[i, j].Parent.X < _grid[i, j].X)
+                    {
+                        
+                        list += "> ";
+                    }
+                    else if (_grid[i, j].Parent.X > _grid[i, j].X)
+                    {
+                        
+                        list += "< ";
+                    }
+                    else if (_grid[i, j].Parent.Y > _grid[i, j].Y)
+                    {
+                        
+                        list += "^ ";
+                    }
+                    else if (_grid[i, j].Parent.Y < _grid[i, j].Y)
+                    {
+                        
+                        list += "↓ ";
+                    }
+                }
+                else
+                {
+                    list += _grid[i, j].Value + " ";
+                }
             }
 
             list += Environment.NewLine;
