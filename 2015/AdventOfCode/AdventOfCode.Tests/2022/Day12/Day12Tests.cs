@@ -28,6 +28,28 @@ public class Day12Tests
     }
 
     [Fact]
+    public void Example2()
+    {
+        var input = FileReader.GetExample("2022", "12");
+        var grid = Grid.Parse(input);
+
+        var startingPositions = grid.GetGrid().Where(x => x.Value == 1);
+        var shortestPath = int.MaxValue;
+
+        foreach (var startingPosition in startingPositions)
+        {
+            var gridPosition = PathFinder.Pathfind(grid, startingPosition);
+            var list = PathFinder.FindShortestPath(gridPosition)- 2;
+            if (list < shortestPath)
+            {
+                shortestPath = list;
+            }
+        }
+        
+        Assert.Equal(29, shortestPath);
+    }
+
+    [Fact]
     public void Puzzle1()
     {
         var input = FileReader.GetResource("2022", "12");
@@ -72,6 +94,7 @@ file abstract record PathFinder
         {
             node.gCost = int.MaxValue;
             node.hCost = int.MaxValue;
+            node.Parent = null;
         }
 
         start ??= nodes.First(x => x.IsStart);
@@ -130,6 +153,9 @@ file abstract record PathFinder
 
     public static int FindShortestPath(GridPosition position)
     {
+        if (position == null)
+            return int.MaxValue;
+        
         var count = 1;
 
         var currentNode = position;
