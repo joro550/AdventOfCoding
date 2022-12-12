@@ -16,5 +16,8 @@ namespace AdventOfCode.Tests
 
         public static string GetResource(string year, string day) 
             => GetResource($"AdventOfCode.Tests._{year}.Day{day}.PuzzleInput.txt");
+        
+        public static string GetExample(string year, string day) 
+            => GetResource($"AdventOfCode.Tests._{year}.Day{day}.ExampleInput.txt");
     }
 }
