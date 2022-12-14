@@ -24,7 +24,7 @@ public class Day12Tests
 
         var gridPosition = PathFinder.Pathfind(grid);
         var list = PathFinder.FindShortestPath(gridPosition);
-        Assert.Equal(31, list - 2);
+        Assert.Equal(31, list - 1);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class Day12Tests
         foreach (var startingPosition in startingPositions)
         {
             var gridPosition = PathFinder.Pathfind(grid, startingPosition);
-            var list = PathFinder.FindShortestPath(gridPosition)- 2;
+            var list = PathFinder.FindShortestPath(gridPosition)- 1;
             if (list < shortestPath)
             {
                 shortestPath = list;
@@ -57,7 +57,7 @@ public class Day12Tests
 
         var gridPosition = PathFinder.Pathfind(grid);
         var list = PathFinder.FindShortestPath(gridPosition);
-        Assert.Equal(462, list - 2);
+        Assert.Equal(462, list - 1);
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public class Day12Tests
         foreach (var startingPosition in startingPositions)
         {
             var gridPosition = PathFinder.Pathfind(grid, startingPosition);
-            var list = PathFinder.FindShortestPath(gridPosition)- 2;
+            var list = PathFinder.FindShortestPath(gridPosition)- 1;
             if (list < shortestPath)
             {
                 shortestPath = list;
@@ -161,14 +161,14 @@ file abstract record PathFinder
         if (position == null)
             return int.MaxValue;
         
-        var count = 1;
+        var count = 0;
 
         var currentNode = position;
-        while (currentNode != null)
+        do
         {
             currentNode = currentNode.Parent;
             count += 1;
-        }
+        } while (currentNode != null);
 
         return count;
     }
