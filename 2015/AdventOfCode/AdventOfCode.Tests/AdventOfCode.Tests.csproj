@@ -34,6 +34,7 @@
       <EmbeddedResource Include="2022\Day12\PuzzleInput.txt" />
       <EmbeddedResource Include="2022\Day13\ExampleInput.txt" />
       <EmbeddedResource Include="2022\Day13\PuzzleInput.txt" />
+      <EmbeddedResource Include="2022\Day14\PuzzleInput.txt" />
       <EmbeddedResource Include="2022\Day2\PuzzleInput.txt" />
       <EmbeddedResource Include="2022\Day4\PuzzleInput.txt" />
       <EmbeddedResource Include="2022\Day3\PuzzleInput.txt" />
